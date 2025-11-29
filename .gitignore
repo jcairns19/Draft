@@ -152,3 +152,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+notes.txt
