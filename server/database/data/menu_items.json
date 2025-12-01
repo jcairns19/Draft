@@ -1,0 +1,322 @@
+[
+  {
+    "type": "beer",
+    "name": "Seafood Lager",
+    "abv": 4.5,
+    "description": "A light lager perfect with fresh seafood.",
+    "image_url": "/images/seafood-lager.jpg",
+    "price": 6.99
+  },
+  {
+    "type": "entree",
+    "name": "Lobster Roll",
+    "abv": null,
+    "description": "Fresh lobster in a buttered roll.",
+    "image_url": "/images/lobster-roll.jpg",
+    "price": 24.99
+  },
+  {
+    "type": "drink",
+    "name": "Iced Tea",
+    "abv": null,
+    "description": "Refreshing unsweetened iced tea.",
+    "image_url": "/images/iced-tea.jpg",
+    "price": 3.49
+  },
+  {
+    "type": "food",
+    "name": "Clam Chowder",
+    "abv": null,
+    "description": "Boston's famous creamy clam chowder.",
+    "image_url": "/images/clam-chowder.jpg",
+    "price": 8.99
+  },
+  {
+    "type": "beer",
+    "name": "Market Ale",
+    "abv": 5.2,
+    "description": "A hoppy ale brewed for the market.",
+    "image_url": "/images/market-ale.jpg",
+    "price": 7.49
+  },
+  {
+    "type": "food",
+    "name": "Oyster Platter",
+    "abv": null,
+    "description": "Fresh oysters on the half shell.",
+    "image_url": "/images/oyster-platter.jpg",
+    "price": 18.99
+  },
+  {
+    "type": "beer",
+    "name": "Historic Stout",
+    "abv": 6.0,
+    "description": "Dark stout with historic flavors.",
+    "image_url": "/images/historic-stout.jpg",
+    "price": 8.99
+  },
+  {
+    "type": "dessert",
+    "name": "Cheesecake",
+    "abv": null,
+    "description": "Rich and creamy cheesecake slice.",
+    "image_url": "/images/cheesecake.jpg",
+    "price": 9.99
+  },
+  {
+    "type": "drink",
+    "name": "Lemonade",
+    "abv": null,
+    "description": "Fresh squeezed lemonade.",
+    "image_url": "/images/lemonade.jpg",
+    "price": 4.49
+  },
+  {
+    "type": "dessert",
+    "name": "Cannoli",
+    "abv": null,
+    "description": "Italian pastry filled with sweet ricotta.",
+    "image_url": "/images/cannoli.jpg",
+    "price": 5.99
+  },
+  {
+    "type": "drink",
+    "name": "Coffee",
+    "abv": null,
+    "description": "Fresh brewed coffee.",
+    "image_url": "/images/coffee.jpg",
+    "price": 2.99
+  },
+  {
+    "type": "food",
+    "name": "Donut",
+    "abv": null,
+    "description": "Classic glazed donut.",
+    "image_url": "/images/donut.jpg",
+    "price": 1.99
+  },
+  {
+    "type": "beer",
+    "name": "Craft IPA",
+    "abv": 7.0,
+    "description": "Hoppy IPA with citrus notes.",
+    "image_url": "/images/craft-ipa.jpg",
+    "price": 9.49
+  },
+  {
+    "type": "entree",
+    "name": "Pub Burger",
+    "abv": null,
+    "description": "Juicy burger with fries.",
+    "image_url": "/images/pub-burger.jpg",
+    "price": 14.99
+  },
+  {
+    "type": "entree",
+    "name": "Mongolian Beef",
+    "abv": null,
+    "description": "Stir-fried beef with vegetables.",
+    "image_url": "/images/mongolian-beef.jpg",
+    "price": 16.99
+  },
+  {
+    "type": "drink",
+    "name": "Green Tea",
+    "abv": null,
+    "description": "Traditional green tea.",
+    "image_url": "/images/green-tea.jpg",
+    "price": 3.99
+  },
+  {
+    "type": "beer",
+    "name": "Boston Lager",
+    "abv": 4.8,
+    "description": "Samuel Adams Boston Lager.",
+    "image_url": "/images/boston-lager.jpg",
+    "price": 6.99
+  },
+  {
+    "type": "entree",
+    "name": "Brewpub Pizza",
+    "abv": null,
+    "description": "Wood-fired pizza with local toppings.",
+    "image_url": "/images/brewpub-pizza.jpg",
+    "price": 12.99
+  },
+  {
+    "type": "entree",
+    "name": "Pasta Carbonara",
+    "abv": null,
+    "description": "Classic Italian pasta with bacon and eggs.",
+    "image_url": "/images/pasta-carbonara.jpg",
+    "price": 15.99
+  },
+  {
+    "type": "drink",
+    "name": "Espresso",
+    "abv": null,
+    "description": "Strong Italian espresso.",
+    "image_url": "/images/espresso.jpg",
+    "price": 3.49
+  },
+  {
+    "type": "beer",
+    "name": "Wheat Beer",
+    "abv": 5.0,
+    "description": "Light wheat beer with a refreshing taste.",
+    "image_url": "/images/wheat-beer.jpg",
+    "price": 7.99
+  },
+  {
+    "type": "entree",
+    "name": "Grilled Salmon",
+    "abv": null,
+    "description": "Grilled salmon with seasonal vegetables.",
+    "image_url": "/images/grilled-salmon.jpg",
+    "price": 22.99
+  },
+  {
+    "type": "drink",
+    "name": "Soda",
+    "abv": null,
+    "description": "Refreshing cola soda.",
+    "image_url": "/images/soda.jpg",
+    "price": 2.49
+  },
+  {
+    "type": "appetizer",
+    "name": "French Fries",
+    "abv": null,
+    "description": "Crispy golden french fries.",
+    "image_url": "/images/french-fries.jpg",
+    "price": 4.99
+  },
+  {
+    "type": "dessert",
+    "name": "Tiramisu",
+    "abv": null,
+    "description": "Classic coffee-flavored Italian dessert.",
+    "image_url": "/images/tiramisu.jpg",
+    "price": 7.99
+  },
+  {
+    "type": "beer",
+    "name": "Porter",
+    "abv": 5.5,
+    "description": "Smooth dark porter with chocolate notes.",
+    "image_url": "/images/porter.jpg",
+    "price": 8.49
+  },
+  {
+    "type": "entree",
+    "name": "Grilled Steak",
+    "abv": null,
+    "description": "Juicy grilled steak with herbs.",
+    "image_url": "/images/grilled-steak.jpg",
+    "price": 29.99
+  },
+  {
+    "type": "drink",
+    "name": "Bottled Water",
+    "abv": null,
+    "description": "Pure bottled spring water.",
+    "image_url": "/images/bottled-water.jpg",
+    "price": 1.99
+  },
+  {
+    "type": "appetizer",
+    "name": "Garden Salad",
+    "abv": null,
+    "description": "Fresh mixed greens with vinaigrette.",
+    "image_url": "/images/garden-salad.jpg",
+    "price": 9.99
+  },
+  {
+    "type": "dessert",
+    "name": "Vanilla Ice Cream",
+    "abv": null,
+    "description": "Creamy vanilla ice cream scoop.",
+    "image_url": "/images/vanilla-ice-cream.jpg",
+    "price": 4.99
+  },
+  {
+    "type": "beer",
+    "name": "Pilsner",
+    "abv": 4.2,
+    "description": "Crisp and refreshing pilsner.",
+    "image_url": "/images/pilsner.jpg",
+    "price": 6.49
+  },
+  {
+    "type": "entree",
+    "name": "Chicken Parmesan",
+    "abv": null,
+    "description": "Breaded chicken topped with marinara and cheese.",
+    "image_url": "/images/chicken-parmesan.jpg",
+    "price": 19.99
+  },
+  {
+    "type": "drink",
+    "name": "Orange Juice",
+    "abv": null,
+    "description": "Freshly squeezed orange juice.",
+    "image_url": "/images/orange-juice.jpg",
+    "price": 3.99
+  },
+  {
+    "type": "appetizer",
+    "name": "Nachos",
+    "abv": null,
+    "description": "Loaded cheese nachos with toppings.",
+    "image_url": "/images/nachos.jpg",
+    "price": 11.99
+  },
+  {
+    "type": "dessert",
+    "name": "Chocolate Brownie",
+    "abv": null,
+    "description": "Rich chocolate brownie.",
+    "image_url": "/images/chocolate-brownie.jpg",
+    "price": 5.99
+  },
+  {
+    "type": "beer",
+    "name": "Saison",
+    "abv": 6.5,
+    "description": "Fruity and spicy saison ale.",
+    "image_url": "/images/saison.jpg",
+    "price": 9.99
+  },
+  {
+    "type": "entree",
+    "name": "Pasta Primavera",
+    "abv": null,
+    "description": "Pasta with fresh spring vegetables.",
+    "image_url": "/images/pasta-primavera.jpg",
+    "price": 16.99
+  },
+  {
+    "type": "drink",
+    "name": "Chocolate Milkshake",
+    "abv": null,
+    "description": "Thick chocolate milkshake.",
+    "image_url": "/images/chocolate-milkshake.jpg",
+    "price": 5.49
+  },
+  {
+    "type": "appetizer",
+    "name": "Buffalo Wings",
+    "abv": null,
+    "description": "Spicy buffalo chicken wings.",
+    "image_url": "/images/buffalo-wings.jpg",
+    "price": 13.99
+  },
+  {
+    "type": "dessert",
+    "name": "Apple Pie",
+    "abv": null,
+    "description": "Warm apple pie with cinnamon.",
+    "image_url": "/images/apple-pie.jpg",
+    "price": 6.99
+  }
+]

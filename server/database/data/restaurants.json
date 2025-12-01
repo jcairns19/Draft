@@ -1,0 +1,82 @@
+[
+  {
+    "name": "The Legal Sea Foods",
+    "slogan": "Fresh Seafood Since 1950",
+    "address": "255 State St, Boston, MA 02109",
+    "image_url": "/images/legal-seafoods.jpg",
+    "open_time": "11:00:00",
+    "close_time": "22:00:00"
+  },
+  {
+    "name": "Quincy Market",
+    "slogan": "Historic Market with Fresh Eats",
+    "address": "4 S Market St, Boston, MA 02109",
+    "image_url": "/images/quincy-market.jpg",
+    "open_time": "10:00:00",
+    "close_time": "21:00:00"
+  },
+  {
+    "name": "Union Oyster House",
+    "slogan": "America's Oldest Restaurant",
+    "address": "41 Union St, Boston, MA 02108",
+    "image_url": "/images/union-oyster.jpg",
+    "open_time": "11:00:00",
+    "close_time": "21:30:00"
+  },
+  {
+    "name": "Cheesecake Factory",
+    "slogan": "Over 250 Menu Items",
+    "address": "199 Boylston St, Boston, MA 02116",
+    "image_url": "/images/cheesecake-factory.jpg",
+    "open_time": "11:00:00",
+    "close_time": "23:00:00"
+  },
+  {
+    "name": "Mike's Pastry",
+    "slogan": "Boston's Best Cannoli",
+    "address": "300 Hanover St, Boston, MA 02113",
+    "image_url": "/images/mikes-pastry.jpg",
+    "open_time": "08:00:00",
+    "close_time": "22:00:00"
+  },
+  {
+    "name": "Dunkin' Donuts",
+    "slogan": "America Runs on Dunkin'",
+    "address": "1 Summer St, Boston, MA 02110",
+    "image_url": "/images/dunkin-donuts.jpg",
+    "open_time": "05:00:00",
+    "close_time": "23:00:00"
+  },
+  {
+    "name": "The Tip Tap Room",
+    "slogan": "Craft Beer and Pub Grub",
+    "address": "138 Cambridge St, Boston, MA 02114",
+    "image_url": "/images/tip-tap-room.jpg",
+    "open_time": "11:00:00",
+    "close_time": "02:00:00"
+  },
+  {
+    "name": "P.F. Chang's",
+    "slogan": "Asian-Inspired Cuisine",
+    "address": "8 Park Plaza, Boston, MA 02116",
+    "image_url": "/images/pf-changs.jpg",
+    "open_time": "11:00:00",
+    "close_time": "22:00:00"
+  },
+  {
+    "name": "Boston Beer Works",
+    "slogan": "Brewpub with Boston Brews",
+    "address": "61 Brookline Ave, Boston, MA 02215",
+    "image_url": "/images/boston-beer-works.jpg",
+    "open_time": "11:00:00",
+    "close_time": "23:00:00"
+  },
+  {
+    "name": "The North End",
+    "slogan": "Italian Cuisine in the Heart of Boston",
+    "address": "123 Hanover St, Boston, MA 02113",
+    "image_url": "/images/north-end.jpg",
+    "open_time": "12:00:00",
+    "close_time": "23:00:00"
+  }
+]
