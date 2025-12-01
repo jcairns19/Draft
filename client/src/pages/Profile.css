@@ -1,0 +1,133 @@
+.profile {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.profile-header h1 {
+  font-size: 2.5rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.profile-header p {
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.profile-content {
+  display: grid;
+  gap: 3rem;
+}
+
+.user-info, .payment-methods {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-info h2, .payment-methods h2 {
+  font-size: 1.5rem;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.info-item span {
+  color: #6b7280;
+}
+
+.payment-methods-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.payment-method-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.payment-method-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-brand {
+  font-weight: 600;
+  color: #1f2937;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.card-number {
+  font-family: monospace;
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.card-holder {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.default-badge {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.no-payment-methods {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 2rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+
+.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  border: 1px solid #fecaca;
+}

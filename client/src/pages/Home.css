@@ -1,0 +1,152 @@
+.home {
+  min-height: calc(100vh - 80px);
+  padding: 2rem 1rem;
+}
+
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 3rem 1rem;
+  text-align: center;
+  border-radius: 8px;
+  margin-bottom: 3rem;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.hero p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s;
+  margin: 0 0.25rem 0.5rem 0.25rem;
+  font-size: 1rem;
+}
+
+.cta-button.primary {
+  background-color: #2563eb;
+  color: white;
+}
+
+.cta-button.primary:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.cta-button.secondary {
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.cta-button.secondary:hover {
+  background-color: white;
+  color: #2563eb;
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.feature {
+  text-align: center;
+  padding: 2rem 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feature h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.feature p {
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .home {
+    padding: 3rem 2rem;
+  }
+
+  .hero {
+    padding: 4rem 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+
+  .auth-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .cta-button {
+    margin: 0 0.5rem;
+  }
+
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  .home {
+    padding: 4rem;
+  }
+
+  .hero {
+    padding: 5rem 3rem;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+  .features {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .feature {
+    padding: 2.5rem 2rem;
+  }
+}
