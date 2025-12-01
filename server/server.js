@@ -8,6 +8,9 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 
+// Serve static images from the images directory
+app.use('/images', express.static('images'));
+
 // Routes
 app.use('/api', apiRouter);
 app.get('/', (req, res) => {
