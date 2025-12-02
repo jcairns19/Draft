@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import pool from './database/config.js';
+import logger from './logger.js';
 
 /**
  * Sets up Socket.IO functionality for restaurant chat rooms
@@ -25,7 +26,7 @@ export function setupSocketIO(io) {
 
   // Socket.io connection handling
   io.on('connection', (socket) => {
-    console.log(`User ${socket.userId} connected`);
+    logger.info(`User ${socket.userId} connected`);
 
     // Join restaurant chat room
     socket.on('join_restaurant_chat', async (restaurantId) => {
@@ -50,10 +51,10 @@ export function setupSocketIO(io) {
         socket.join(roomName);
 
         socket.emit('joined_room', { restaurantId, roomName });
-        console.log(`User ${socket.userId} joined restaurant chat ${restaurantId}`);
+        logger.info(`User ${socket.userId} joined restaurant chat ${restaurantId}`);
 
       } catch (err) {
-        console.error('Error joining restaurant chat:', err);
+        logger.error('Error joining restaurant chat:', err);
         socket.emit('join_error', { message: 'Failed to join chat room' });
       }
     });
@@ -94,7 +95,7 @@ export function setupSocketIO(io) {
         io.to(roomName).emit('new_message', messageData);
 
       } catch (err) {
-        console.error('Error sending message:', err);
+        logger.error('Error sending message:', err);
         socket.emit('message_error', { message: 'Failed to send message' });
       }
     });
@@ -104,11 +105,11 @@ export function setupSocketIO(io) {
       const roomName = `restaurant_${restaurantId}`;
       socket.leave(roomName);
       socket.emit('left_room', { restaurantId, roomName });
-      console.log(`User ${socket.userId} left restaurant chat ${restaurantId}`);
+      logger.info(`User ${socket.userId} left restaurant chat ${restaurantId}`);
     });
 
     socket.on('disconnect', () => {
-      console.log(`User ${socket.userId} disconnected`);
+      logger.info(`User ${socket.userId} disconnected`);
     });
   });
 }
@@ -142,7 +143,7 @@ async function checkUserCanJoinChat(userId, restaurantId) {
 
     return recentClosedTabResult.rowCount > 0;
   } catch (err) {
-    console.error('Error checking user chat eligibility:', err);
+    logger.error('Error checking user chat eligibility:', err);
     return false;
   }
 }

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import pool from '../database/config.js';
 import auth from '../middleware/auth.js';
+import logger from '../logger.js';
 
 /**
  * Handles user signup by creating a new user account.
@@ -35,8 +36,8 @@ export async function signup(req, res) {
     const token = auth.signToken(user);
     return res.status(201).json({ user, token });
   } catch (err) {
-    console.error('Signup error', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    logger.error('Signup error', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
 
@@ -64,8 +65,8 @@ export async function login(req, res) {
     delete user.password_hash;
     return res.json({ user, token });
   } catch (err) {
-    console.error('Login error', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    logger.error('Login error', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
 

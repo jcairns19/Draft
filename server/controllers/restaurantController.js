@@ -1,4 +1,5 @@
 import pool from '../database/config.js';
+import logger from '../logger.js';
 
 /**
  * Retrieves all restaurants.
@@ -11,7 +12,7 @@ export async function getAllRestaurants(req, res) {
     const result = await pool.query('SELECT id, name, slogan, address, open_time, close_time, image_url, created_at FROM restaurants ORDER BY name');
     res.json({ restaurants: result.rows });
   } catch (err) {
-    console.error('Get all restaurants error', err);
+    logger.error('Get all restaurants error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -31,7 +32,7 @@ export async function getRestaurantById(req, res) {
     }
     res.json({ restaurant: result.rows[0] });
   } catch (err) {
-    console.error('Get restaurant by ID error', err);
+    logger.error('Get restaurant by ID error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -60,7 +61,7 @@ export async function getMenu(req, res) {
     `, [id]);
     res.json({ menuItems: result.rows });
   } catch (err) {
-    console.error('Get menu error', err);
+    logger.error('Get menu error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

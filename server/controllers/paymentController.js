@@ -1,4 +1,5 @@
 import pool from '../database/config.js';
+import logger from '../logger.js';
 
 /**
  * Retrieves all payment methods associated with the authenticated user.
@@ -17,7 +18,7 @@ export async function getPaymentMethods(req, res) {
 
     res.json({ paymentMethods: result.rows });
   } catch (err) {
-    console.error('Get payment methods error', err);
+    logger.error('Get payment methods error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -62,7 +63,7 @@ export async function createPaymentMethod(req, res) {
 
     res.status(201).json({ paymentMethod });
   } catch (err) {
-    console.error('Create payment method error', err);
+    logger.error('Create payment method error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -116,7 +117,7 @@ export async function updatePaymentMethod(req, res) {
 
     res.json({ paymentMethod });
   } catch (err) {
-    console.error('Update payment method error', err);
+    logger.error('Update payment method error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -138,7 +139,7 @@ export async function deletePaymentMethod(req, res) {
     }
     res.json({ message: 'Payment method deleted successfully' });
   } catch (err) {
-    console.error('Delete payment method error', err);
+    logger.error('Delete payment method error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

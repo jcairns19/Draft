@@ -1,4 +1,5 @@
 import pool from '../database/config.js';
+import logger from '../logger.js';
 
 /**
  * Creates a new tab for a user at a restaurant.
@@ -35,7 +36,7 @@ export async function createTab(req, res) {
 
     res.status(201).json({ tab: result.rows[0] });
   } catch (err) {
-    console.error('Create tab error', err);
+    logger.error('Create tab error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -101,7 +102,7 @@ export async function addItemToTab(req, res) {
 
     res.json({ tabItem: result.rows[0] });
   } catch (err) {
-    console.error('Add item to tab error', err);
+    logger.error('Add item to tab error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -152,7 +153,7 @@ export async function closeTab(req, res) {
 
     res.json({ tab: result.rows[0] });
   } catch (err) {
-    console.error('Close tab error', err);
+    logger.error('Close tab error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -173,7 +174,7 @@ export async function getUserTabs(req, res) {
     );
     res.json({ tabs: result.rows });
   } catch (err) {
-    console.error('Get user tabs error', err);
+    logger.error('Get user tabs error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -209,7 +210,7 @@ export async function getTab(req, res) {
       items: itemsResult.rows
     });
   } catch (err) {
-    console.error('Get tab error', err);
+    logger.error('Get tab error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
