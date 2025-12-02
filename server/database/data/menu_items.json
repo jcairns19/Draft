@@ -1,322 +1,402 @@
 [
   {
-    "type": "beer",
-    "name": "Seafood Lager",
-    "abv": 4.5,
-    "description": "A light lager perfect with fresh seafood.",
-    "image_url": "/images/seafood-lager.jpg",
-    "price": 6.99
-  },
-  {
-    "type": "entree",
-    "name": "Lobster Roll",
-    "abv": null,
-    "description": "Fresh lobster in a buttered roll.",
-    "image_url": "/images/lobster-roll.jpg",
-    "price": 24.99
-  },
-  {
-    "type": "drink",
-    "name": "Iced Tea",
-    "abv": null,
-    "description": "Refreshing unsweetened iced tea.",
-    "image_url": "/images/iced-tea.jpg",
-    "price": 3.49
-  },
-  {
-    "type": "food",
-    "name": "Clam Chowder",
-    "abv": null,
-    "description": "Boston's famous creamy clam chowder.",
-    "image_url": "/images/clam-chowder.jpg",
-    "price": 8.99
-  },
-  {
-    "type": "beer",
-    "name": "Market Ale",
-    "abv": 5.2,
-    "description": "A hoppy ale brewed for the market.",
-    "image_url": "/images/market-ale.jpg",
-    "price": 7.49
-  },
-  {
-    "type": "food",
-    "name": "Oyster Platter",
-    "abv": null,
-    "description": "Fresh oysters on the half shell.",
-    "image_url": "/images/oyster-platter.jpg",
-    "price": 18.99
-  },
-  {
-    "type": "beer",
-    "name": "Historic Stout",
-    "abv": 6.0,
-    "description": "Dark stout with historic flavors.",
-    "image_url": "/images/historic-stout.jpg",
-    "price": 8.99
-  },
-  {
-    "type": "dessert",
-    "name": "Cheesecake",
-    "abv": null,
-    "description": "Rich and creamy cheesecake slice.",
-    "image_url": "/images/cheesecake.jpg",
-    "price": 9.99
-  },
-  {
-    "type": "drink",
-    "name": "Lemonade",
-    "abv": null,
-    "description": "Fresh squeezed lemonade.",
-    "image_url": "/images/lemonade.jpg",
-    "price": 4.49
-  },
-  {
-    "type": "dessert",
-    "name": "Cannoli",
-    "abv": null,
-    "description": "Italian pastry filled with sweet ricotta.",
-    "image_url": "/images/cannoli.jpg",
-    "price": 5.99
-  },
-  {
-    "type": "drink",
-    "name": "Coffee",
-    "abv": null,
-    "description": "Fresh brewed coffee.",
-    "image_url": "/images/coffee.jpg",
-    "price": 2.99
-  },
-  {
-    "type": "food",
-    "name": "Donut",
-    "abv": null,
-    "description": "Classic glazed donut.",
-    "image_url": "/images/donut.jpg",
-    "price": 1.99
-  },
-  {
-    "type": "beer",
-    "name": "Craft IPA",
-    "abv": 7.0,
-    "description": "Hoppy IPA with citrus notes.",
-    "image_url": "/images/craft-ipa.jpg",
-    "price": 9.49
-  },
-  {
-    "type": "entree",
-    "name": "Pub Burger",
-    "abv": null,
-    "description": "Juicy burger with fries.",
-    "image_url": "/images/pub-burger.jpg",
-    "price": 14.99
-  },
-  {
-    "type": "entree",
-    "name": "Mongolian Beef",
-    "abv": null,
-    "description": "Stir-fried beef with vegetables.",
-    "image_url": "/images/mongolian-beef.jpg",
-    "price": 16.99
-  },
-  {
-    "type": "drink",
-    "name": "Green Tea",
-    "abv": null,
-    "description": "Traditional green tea.",
-    "image_url": "/images/green-tea.jpg",
-    "price": 3.99
-  },
-  {
-    "type": "beer",
-    "name": "Boston Lager",
-    "abv": 4.8,
-    "description": "Samuel Adams Boston Lager.",
-    "image_url": "/images/boston-lager.jpg",
-    "price": 6.99
-  },
-  {
-    "type": "entree",
-    "name": "Brewpub Pizza",
-    "abv": null,
-    "description": "Wood-fired pizza with local toppings.",
-    "image_url": "/images/brewpub-pizza.jpg",
-    "price": 12.99
-  },
-  {
-    "type": "entree",
-    "name": "Pasta Carbonara",
-    "abv": null,
-    "description": "Classic Italian pasta with bacon and eggs.",
-    "image_url": "/images/pasta-carbonara.jpg",
-    "price": 15.99
-  },
-  {
-    "type": "drink",
-    "name": "Espresso",
-    "abv": null,
-    "description": "Strong Italian espresso.",
-    "image_url": "/images/espresso.jpg",
-    "price": 3.49
-  },
-  {
-    "type": "beer",
-    "name": "Wheat Beer",
-    "abv": 5.0,
-    "description": "Light wheat beer with a refreshing taste.",
-    "image_url": "/images/wheat-beer.jpg",
+    "type": "draft",
+    "name": "Hoppy IPA",
+    "abv": 6.8,
+    "description": "A bold India Pale Ale with citrus and pine notes, perfect for beer enthusiasts.",
+    "image_url": "/images/beer/ipa.jpeg",
     "price": 7.99
   },
   {
-    "type": "entree",
-    "name": "Grilled Salmon",
-    "abv": null,
-    "description": "Grilled salmon with seasonal vegetables.",
-    "image_url": "/images/grilled-salmon.jpg",
-    "price": 22.99
-  },
-  {
-    "type": "drink",
-    "name": "Soda",
-    "abv": null,
-    "description": "Refreshing cola soda.",
-    "image_url": "/images/soda.jpg",
-    "price": 2.49
-  },
-  {
-    "type": "appetizer",
-    "name": "French Fries",
-    "abv": null,
-    "description": "Crispy golden french fries.",
-    "image_url": "/images/french-fries.jpg",
-    "price": 4.99
-  },
-  {
-    "type": "dessert",
-    "name": "Tiramisu",
-    "abv": null,
-    "description": "Classic coffee-flavored Italian dessert.",
-    "image_url": "/images/tiramisu.jpg",
-    "price": 7.99
-  },
-  {
-    "type": "beer",
-    "name": "Porter",
-    "abv": 5.5,
-    "description": "Smooth dark porter with chocolate notes.",
-    "image_url": "/images/porter.jpg",
-    "price": 8.49
-  },
-  {
-    "type": "entree",
-    "name": "Grilled Steak",
-    "abv": null,
-    "description": "Juicy grilled steak with herbs.",
-    "image_url": "/images/grilled-steak.jpg",
-    "price": 29.99
-  },
-  {
-    "type": "drink",
-    "name": "Bottled Water",
-    "abv": null,
-    "description": "Pure bottled spring water.",
-    "image_url": "/images/bottled-water.jpg",
-    "price": 1.99
-  },
-  {
-    "type": "appetizer",
-    "name": "Garden Salad",
-    "abv": null,
-    "description": "Fresh mixed greens with vinaigrette.",
-    "image_url": "/images/garden-salad.jpg",
-    "price": 9.99
-  },
-  {
-    "type": "dessert",
-    "name": "Vanilla Ice Cream",
-    "abv": null,
-    "description": "Creamy vanilla ice cream scoop.",
-    "image_url": "/images/vanilla-ice-cream.jpg",
-    "price": 4.99
-  },
-  {
-    "type": "beer",
-    "name": "Pilsner",
+    "type": "draft",
+    "name": "Golden Lager",
     "abv": 4.2,
-    "description": "Crisp and refreshing pilsner.",
-    "image_url": "/images/pilsner.jpg",
+    "description": "Crisp and refreshing lager with a clean finish, great for any occasion.",
+    "image_url": "/images/beer/lager.jpeg",
     "price": 6.49
   },
   {
-    "type": "entree",
-    "name": "Chicken Parmesan",
-    "abv": null,
-    "description": "Breaded chicken topped with marinara and cheese.",
-    "image_url": "/images/chicken-parmesan.jpg",
-    "price": 19.99
+    "type": "draft",
+    "name": "Dark Stout",
+    "abv": 5.5,
+    "description": "Rich and creamy stout with chocolate and coffee flavors.",
+    "image_url": "/images/beer/stout.jpeg",
+    "price": 7.49
   },
   {
-    "type": "drink",
-    "name": "Orange Juice",
-    "abv": null,
-    "description": "Freshly squeezed orange juice.",
-    "image_url": "/images/orange-juice.jpg",
-    "price": 3.99
+    "type": "draft",
+    "name": "Wheat Beer",
+    "abv": 4.8,
+    "description": "Light and refreshing wheat beer with hints of banana and clove.",
+    "image_url": "/images/beer/wheat_beer.jpeg",
+    "price": 6.99
   },
   {
-    "type": "appetizer",
-    "name": "Nachos",
-    "abv": null,
-    "description": "Loaded cheese nachos with toppings.",
-    "image_url": "/images/nachos.jpg",
-    "price": 11.99
+    "type": "draft",
+    "name": "Amber Ale",
+    "abv": 5.2,
+    "description": "Smooth amber ale with caramel malt flavors and a balanced hop profile.",
+    "image_url": "/images/beer/amber.jpeg",
+    "price": 7.29
   },
   {
-    "type": "dessert",
-    "name": "Chocolate Brownie",
-    "abv": null,
-    "description": "Rich chocolate brownie.",
-    "image_url": "/images/chocolate-brownie.jpg",
+    "type": "draft",
+    "name": "Pale Ale",
+    "abv": 5.0,
+    "description": "Classic pale ale with floral hop aromas and a crisp finish.",
+    "image_url": "/images/beer/ipa.jpeg",
+    "price": 6.79
+  },
+  {
+    "type": "draft",
+    "name": "Porter",
+    "abv": 5.8,
+    "description": "Robust porter with dark malt flavors and subtle chocolate notes.",
+    "image_url": "/images/beer/stout.jpeg",
+    "price": 7.69
+  },
+  {
+    "type": "draft",
+    "name": "Belgian Tripel",
+    "abv": 8.5,
+    "description": "Strong Belgian-style tripel with fruity esters and spicy yeast character.",
+    "image_url": "/images/beer/belgian.jpeg",
+    "price": 8.99
+  },
+  {
+    "type": "bottle/can",
+    "name": "Craft Lager",
+    "abv": 4.5,
+    "description": "Premium craft lager with clean malt character and subtle hop bitterness.",
+    "image_url": "/images/beer/bottle.png",
     "price": 5.99
   },
   {
-    "type": "beer",
+    "type": "bottle/can",
+    "name": "Session IPA",
+    "abv": 4.2,
+    "description": "Lower ABV IPA that's easy to drink with bright citrus and tropical hop flavors.",
+    "image_url": "/images/beer/can.jpeg",
+    "price": 6.49
+  },
+  {
+    "type": "bottle/can",
+    "name": "Imperial Stout",
+    "abv": 9.2,
+    "description": "High-gravity stout with intense roasted malt and dark fruit flavors.",
+    "image_url": "/images/beer/bottle.png",
+    "price": 9.49
+  },
+  {
+    "type": "bottle/can",
     "name": "Saison",
-    "abv": 6.5,
-    "description": "Fruity and spicy saison ale.",
-    "image_url": "/images/saison.jpg",
-    "price": 9.99
+    "abv": 6.0,
+    "description": "Farmhouse ale with peppery yeast character and refreshing dryness.",
+    "image_url": "/images/beer/can.jpeg",
+    "price": 7.99
   },
   {
-    "type": "entree",
-    "name": "Pasta Primavera",
-    "abv": null,
-    "description": "Pasta with fresh spring vegetables.",
-    "image_url": "/images/pasta-primavera.jpg",
-    "price": 16.99
+    "type": "bottle/can",
+    "name": "Brown Ale",
+    "abv": 5.4,
+    "description": "Nutty brown ale with caramel malt sweetness and subtle roast character.",
+    "image_url": "/images/beer/bottle.png",
+    "price": 6.99
   },
   {
-    "type": "drink",
-    "name": "Chocolate Milkshake",
-    "abv": null,
-    "description": "Thick chocolate milkshake.",
-    "image_url": "/images/chocolate-milkshake.jpg",
-    "price": 5.49
+    "type": "bottle/can",
+    "name": "Hefeweizen",
+    "abv": 5.1,
+    "description": "Traditional German wheat beer with banana and clove aromas.",
+    "image_url": "/images/beer/bottle.png",
+    "price": 6.79
   },
   {
-    "type": "appetizer",
-    "name": "Buffalo Wings",
+    "type": "bottle/can",
+    "name": "Barleywine",
+    "abv": 10.5,
+    "description": "Aged English-style barleywine with rich malt complexity and warming alcohol.",
+    "image_url": "/images/beer/bottle.png",
+    "price": 12.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Classic Martini",
     "abv": null,
-    "description": "Spicy buffalo chicken wings.",
-    "image_url": "/images/buffalo-wings.jpg",
+    "description": "A sophisticated cocktail made with gin and dry vermouth, garnished with an olive or lemon twist.",
+    "image_url": "/images/cocktail/martini.jpeg",
+    "price": 12.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Old Fashioned",
+    "abv": null,
+    "description": "A timeless whiskey cocktail with muddled sugar, bitters, and a splash of soda, garnished with an orange peel.",
+    "image_url": "/images/cocktail/old_fashioned.jpg",
+    "price": 11.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Mojito",
+    "abv": null,
+    "description": "A refreshing Cuban cocktail with white rum, fresh lime juice, sugar, soda water, and mint leaves.",
+    "image_url": "/images/cocktail/mojito.jpg",
+    "price": 10.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Margarita",
+    "abv": null,
+    "description": "A classic tequila cocktail with lime juice, triple sec, and a salted rim.",
+    "image_url": "/images/cocktail/margarita.jpg",
+    "price": 11.49
+  },
+  {
+    "type": "cocktail",
+    "name": "Cosmopolitan",
+    "abv": null,
+    "description": "A stylish vodka cocktail with cranberry juice, lime juice, and triple sec.",
+    "image_url": "/images/cocktail/cosmo.jpg",
+    "price": 12.49
+  },
+  {
+    "type": "cocktail",
+    "name": "Negroni",
+    "abv": null,
+    "description": "A bitter Italian cocktail made with gin, Campari, and sweet vermouth, garnished with an orange peel.",
+    "image_url": "/images/cocktail/old_fashioned.jpg",
     "price": 13.99
   },
   {
-    "type": "dessert",
-    "name": "Apple Pie",
+    "type": "cocktail",
+    "name": "Whiskey Sour",
     "abv": null,
-    "description": "Warm apple pie with cinnamon.",
-    "image_url": "/images/apple-pie.jpg",
-    "price": 6.99
+    "description": "A balanced whiskey cocktail with fresh lemon juice, simple syrup, and a cherry garnish.",
+    "image_url": "/images/cocktail/old_fashioned.jpg",
+    "price": 10.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Mai Tai",
+    "abv": null,
+    "description": "A tropical rum cocktail with lime juice, orgeat syrup, and curaçao, garnished with a pineapple and cherry.",
+    "image_url": "/images/cocktail/maitai.jpg",
+    "price": 13.49
+  },
+  {
+    "type": "cocktail",
+    "name": "Bloody Mary",
+    "abv": null,
+    "description": "A savory vodka cocktail with tomato juice, Worcestershire sauce, hot sauce, and classic garnishes.",
+    "image_url": "/images/cocktail/bloody_mary.jpg",
+    "price": 11.99
+  },
+  {
+    "type": "cocktail",
+    "name": "French 75",
+    "abv": null,
+    "description": "An elegant champagne cocktail with gin, lemon juice, and simple syrup, topped with champagne.",
+    "image_url": "/images/cocktail/french75.jpg",
+    "price": 14.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Manhattan",
+    "abv": null,
+    "description": "A sophisticated whiskey cocktail with sweet vermouth and bitters, garnished with a cherry.",
+    "image_url": "/images/cocktail/old_fashioned.jpg",
+    "price": 12.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Piña Colada",
+    "abv": null,
+    "description": "A creamy tropical cocktail with rum, pineapple juice, and coconut cream, blended to perfection.",
+    "image_url": "/images/cocktail/pina_colada.jpg",
+    "price": 12.49
+  },
+  {
+    "type": "cocktail",
+    "name": "Espresso Martini",
+    "abv": null,
+    "description": "A modern vodka cocktail with coffee liqueur, espresso, and simple syrup for an energizing kick.",
+    "image_url": "/images/cocktail/espresso_martini.jpg",
+    "price": 13.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Tom Collins",
+    "abv": null,
+    "description": "A refreshing gin cocktail with lemon juice, simple syrup, and soda water, garnished with a lemon slice.",
+    "image_url": "/images/cocktail/french75.jpg",
+    "price": 11.49
+  },
+  {
+    "type": "cocktail",
+    "name": "Singapore Sling",
+    "abv": null,
+    "description": "A complex gin cocktail with cherry brandy, pineapple juice, lime juice, and bitters.",
+    "image_url": "/images/cocktail/maitai.jpg",
+    "price": 13.49
+  },
+  {
+    "type": "cocktail",
+    "name": "Sidecar",
+    "abv": null,
+    "description": "A classic cognac cocktail with lemon juice and triple sec, with a sugared rim.",
+    "image_url": "/images/cocktail/french75.jpg",
+    "price": 12.49
+  },
+  {
+    "type": "cocktail",
+    "name": "Moscow Mule",
+    "abv": null,
+    "description": "A spicy vodka cocktail with ginger beer and lime juice, served in a copper mug.",
+    "image_url": "/images/cocktail/margarita.jpg",
+    "price": 10.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Irish Coffee",
+    "abv": null,
+    "description": "A warm whiskey cocktail with hot coffee, sugar, and whipped cream.",
+    "image_url": "/images/cocktail/espresso_martini.jpg",
+    "price": 9.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Aviation",
+    "abv": null,
+    "description": "A floral gin cocktail with maraschino liqueur, lemon juice, and crème de violette.",
+    "image_url": "/images/cocktail/cosmo.jpg",
+    "price": 13.99
+  },
+  {
+    "type": "cocktail",
+    "name": "Dark 'n' Stormy",
+    "abv": null,
+    "description": "A bold rum cocktail with ginger beer and lime juice, perfect for stormy weather.",
+    "image_url": "/images/cocktail/cosmo.jpg",
+    "price": 11.49
+  },
+  {
+    "type": "vodka",
+    "name": "Tito's Handmade Vodka",
+    "abv": 40.0,
+    "description": "Smooth, clean vodka distilled from corn with a slightly sweet finish.",
+    "image_url": "/images/spirit/vodka.jpg",
+    "price": 8.99
+  },
+  {
+    "type": "vodka",
+    "name": "Grey Goose Vodka",
+    "abv": 40.0,
+    "description": "Premium French vodka with exceptional purity and a clean, crisp taste.",
+    "image_url": "/images/spirit/vodka.jpg",
+    "price": 12.99
+  },
+  {
+    "type": "vodka",
+    "name": "Absolut Vodka",
+    "abv": 40.0,
+    "description": "Swedish vodka known for its purity and versatility in cocktails.",
+    "image_url": "/images/spirit/vodka.jpg",
+    "price": 9.99
+  },
+  {
+    "type": "whiskey",
+    "name": "Jack Daniel's Tennessee Whiskey",
+    "abv": 40.0,
+    "description": "Iconic American whiskey with a smooth, charcoal-filtered character.",
+    "image_url": "/images/spirit/whiskey.jpg",
+    "price": 9.49
+  },
+  {
+    "type": "whiskey",
+    "name": "Jameson Irish Whiskey",
+    "abv": 40.0,
+    "description": "Triple-distilled Irish whiskey with smooth, spicy notes and a clean finish.",
+    "image_url": "/images/spirit/whiskey.jpg",
+    "price": 10.99
+  },
+  {
+    "type": "whiskey",
+    "name": "Johnnie Walker Black Label",
+    "abv": 40.0,
+    "description": "Premium Scotch whisky with rich, smoky flavors and hints of honey and spice.",
+    "image_url": "/images/spirit/whiskey.jpg",
+    "price": 14.99
+  },
+  {
+    "type": "tequila",
+    "name": "Patrón Silver Tequila",
+    "abv": 40.0,
+    "description": "Ultra-premium blanco tequila with bright agave flavors and a smooth finish.",
+    "image_url": "/images/spirit/tequila.jpg",
+    "price": 16.99
+  },
+  {
+    "type": "tequila",
+    "name": "Don Julio Blanco Tequila",
+    "abv": 40.0,
+    "description": "High-quality blanco tequila with pure agave taste and citrus notes.",
+    "image_url": "/images/spirit/tequila.jpg",
+    "price": 13.99
+  },
+  {
+    "type": "tequila",
+    "name": "Clase Azul Reposado Tequila",
+    "abv": 40.0,
+    "description": "Award-winning reposado tequila aged in oak barrels with vanilla and caramel notes.",
+    "image_url": "/images/spirit/tequila.jpg",
+    "price": 24.99
+  },
+  {
+    "type": "gin",
+    "name": "Hendrick's Gin",
+    "abv": 41.4,
+    "description": "Unique gin infused with cucumber and rose petals for a floral, refreshing profile.",
+    "image_url": "/images/spirit/gin.jpg",
+    "price": 11.99
+  },
+  {
+    "type": "gin",
+    "name": "Bombay Sapphire Gin",
+    "abv": 40.0,
+    "description": "London dry gin with ten botanicals including almond, lemon peel, and grains of paradise.",
+    "image_url": "/images/spirit/gin.jpg",
+    "price": 10.49
+  },
+  {
+    "type": "gin",
+    "name": "Tanqueray London Dry Gin",
+    "abv": 40.0,
+    "description": "Classic London dry gin with juniper-forward character and citrus notes.",
+    "image_url": "/images/spirit/gin.jpg",
+    "price": 9.99
+  },
+  {
+    "type": "rum",
+    "name": "Bacardi Superior Rum",
+    "abv": 40.0,
+    "description": "Light, versatile white rum perfect for mixing in cocktails.",
+    "image_url": "/images/spirit/rum.jpg",
+    "price": 8.49
+  },
+  {
+    "type": "rum",
+    "name": "Captain Morgan Spiced Rum",
+    "abv": 35.0,
+    "description": "Popular spiced rum with notes of vanilla, cinnamon, and tropical fruits.",
+    "image_url": "/images/spirit/rum.jpg",
+    "price": 9.49
+  },
+  {
+    "type": "rum",
+    "name": "Mount Gay Eclipse Gold Rum",
+    "abv": 40.0,
+    "description": "Barbadian gold rum with rich molasses flavors and a smooth, warming finish.",
+    "image_url": "/images/spirit/rum.jpg",
+    "price": 12.99
   }
 ]

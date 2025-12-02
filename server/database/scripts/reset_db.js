@@ -45,58 +45,17 @@ async function resetDatabase() {
 
     // Populate restaurant_menu_items junction table
     console.log('Populating restaurant_menu_items table...');
-    // Define mappings: item_id to restaurant_ids
-    const mappings = [
-      { item_id: 1, restaurant_ids: [1] },
-      { item_id: 2, restaurant_ids: [1] },
-      { item_id: 3, restaurant_ids: [1] },
-      { item_id: 4, restaurant_ids: [2] },
-      { item_id: 5, restaurant_ids: [2] },
-      { item_id: 6, restaurant_ids: [3] },
-      { item_id: 7, restaurant_ids: [3] },
-      { item_id: 8, restaurant_ids: [4] },
-      { item_id: 9, restaurant_ids: [4] },
-      { item_id: 10, restaurant_ids: [5] },
-      { item_id: 11, restaurant_ids: [6] },
-      { item_id: 12, restaurant_ids: [6] },
-      { item_id: 13, restaurant_ids: [7] },
-      { item_id: 14, restaurant_ids: [7] },
-      { item_id: 15, restaurant_ids: [8] },
-      { item_id: 16, restaurant_ids: [8] },
-      { item_id: 17, restaurant_ids: [9] },
-      { item_id: 18, restaurant_ids: [9] },
-      { item_id: 19, restaurant_ids: [10] },
-      { item_id: 20, restaurant_ids: [10] },
-      { item_id: 21, restaurant_ids: [1] },
-      { item_id: 22, restaurant_ids: [1] },
-      { item_id: 23, restaurant_ids: [2] },
-      { item_id: 24, restaurant_ids: [2] },
-      { item_id: 25, restaurant_ids: [3] },
-      { item_id: 26, restaurant_ids: [3] },
-      { item_id: 27, restaurant_ids: [4] },
-      { item_id: 28, restaurant_ids: [4] },
-      { item_id: 29, restaurant_ids: [5] },
-      { item_id: 30, restaurant_ids: [5] },
-      { item_id: 31, restaurant_ids: [6] },
-      { item_id: 32, restaurant_ids: [6] },
-      { item_id: 33, restaurant_ids: [7] },
-      { item_id: 34, restaurant_ids: [7] },
-      { item_id: 35, restaurant_ids: [8] },
-      { item_id: 36, restaurant_ids: [8] },
-      { item_id: 37, restaurant_ids: [9] },
-      { item_id: 38, restaurant_ids: [9] },
-      { item_id: 39, restaurant_ids: [10] },
-      { item_id: 40, restaurant_ids: [10] }
-    ];
-    for (const mapping of mappings) {
-      for (const restaurant_id of mapping.restaurant_ids) {
+    const restaurantMenuMappings = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/restaurant_menu_mappings.json'), 'utf8'));
+
+    for (const mapping of restaurantMenuMappings) {
+      for (const menuItemId of mapping.menu_item_ids) {
         await pool.query(
           'INSERT INTO restaurant_menu_items (restaurant_id, menu_item_id) VALUES ($1, $2)',
-          [restaurant_id, mapping.item_id]
+          [mapping.restaurant_id, menuItemId]
         );
       }
     }
-    console.log('Inserted restaurant-menu item mappings.');
+    console.log(`Inserted restaurant-menu item mappings for ${restaurantMenuMappings.length} restaurants.`);
   } catch (err) {
     console.error('Error resetting database:', err);
     process.exit(1);

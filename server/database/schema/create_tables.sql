@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS restaurants (
 -- Stores menu items for each restaurant.
 CREATE TABLE IF NOT EXISTS menu_items (
   id SERIAL PRIMARY KEY,
-  type VARCHAR(50) NOT NULL,  -- e.g., 'beer', 'food', 'drink'
+  type VARCHAR(50) NOT NULL,  -- e.g., 'beer', 'cocktail', 'spirit'
   name VARCHAR(255) NOT NULL,
   abv DECIMAL(5,2),  -- Alcohol by volume (e.g., 5.00 for 5%)
   description TEXT,
