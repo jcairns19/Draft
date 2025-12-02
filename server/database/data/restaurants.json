@@ -1,82 +1,82 @@
 [
   {
-    "name": "The Legal Sea Foods",
-    "slogan": "Fresh Seafood Since 1950",
-    "address": "255 State St, Boston, MA 02109",
-    "image_url": "/images/legal-seafoods.jpg",
+    "name": "Tree House Brewing Company",
+    "slogan": "World-Class Double IPA Brewery",
+    "address": "129 Silas Deane Hwy, Wethersfield, CT 06109",
+    "image_url": "/images/restaurants/treehouse.jpeg",
     "open_time": "11:00:00",
     "close_time": "22:00:00"
   },
   {
-    "name": "Quincy Market",
-    "slogan": "Historic Market with Fresh Eats",
-    "address": "4 S Market St, Boston, MA 02109",
-    "image_url": "/images/quincy-market.jpg",
-    "open_time": "10:00:00",
-    "close_time": "21:00:00"
-  },
-  {
-    "name": "Union Oyster House",
-    "slogan": "America's Oldest Restaurant",
-    "address": "41 Union St, Boston, MA 02108",
-    "image_url": "/images/union-oyster.jpg",
-    "open_time": "11:00:00",
-    "close_time": "21:30:00"
-  },
-  {
-    "name": "Cheesecake Factory",
-    "slogan": "Over 250 Menu Items",
-    "address": "199 Boylston St, Boston, MA 02116",
-    "image_url": "/images/cheesecake-factory.jpg",
+    "name": "Harpoon Brewery",
+    "slogan": "Boston's Original Craft Brewery",
+    "address": "306 Northern Ave, Boston, MA 02210",
+    "image_url": "/images/restaurants/harpoon.jpeg",
     "open_time": "11:00:00",
     "close_time": "23:00:00"
   },
   {
-    "name": "Mike's Pastry",
-    "slogan": "Boston's Best Cannoli",
-    "address": "300 Hanover St, Boston, MA 02113",
-    "image_url": "/images/mikes-pastry.jpg",
-    "open_time": "08:00:00",
-    "close_time": "22:00:00"
+    "name": "Trillium Brewing Company",
+    "slogan": "Innovative Craft Beer from Boston",
+    "address": "110 Canal St, Boston, MA 02114",
+    "image_url": "/images/restaurants/trillium.jpeg",
+    "open_time": "11:00:00",
+    "close_time": "23:00:00"
   },
   {
-    "name": "Dunkin' Donuts",
-    "slogan": "America Runs on Dunkin'",
-    "address": "1 Summer St, Boston, MA 02110",
-    "image_url": "/images/dunkin-donuts.jpg",
-    "open_time": "05:00:00",
+    "name": "Cisco Brewers",
+    "slogan": "Award-Winning Brewery & Restaurant",
+    "address": "217 Congress St, Boston, MA 02210",
+    "image_url": "/images/restaurants/cisco.jpeg",
+    "open_time": "11:00:00",
     "close_time": "23:00:00"
+  },
+  {
+    "name": "The Lincoln Tavern",
+    "slogan": "Historic South End Pub Since 1903",
+    "address": "4251 Washington St, Boston, MA 02131",
+    "image_url": "/images/restaurants/lincoln.png",
+    "open_time": "11:00:00",
+    "close_time": "02:00:00"
+  },
+  {
+    "name": "Game On",
+    "slogan": "Sports Bar & Restaurant in Fenway",
+    "address": "82 Lansdowne St, Boston, MA 02215",
+    "image_url": "/images/restaurants/gameon.jpg",
+    "open_time": "11:00:00",
+    "close_time": "02:00:00"
   },
   {
     "name": "The Tip Tap Room",
     "slogan": "Craft Beer and Pub Grub",
     "address": "138 Cambridge St, Boston, MA 02114",
-    "image_url": "/images/tip-tap-room.jpg",
+    "image_url": "/images/restaurants/tiptap.jpeg",
     "open_time": "11:00:00",
     "close_time": "02:00:00"
   },
   {
-    "name": "P.F. Chang's",
-    "slogan": "Asian-Inspired Cuisine",
-    "address": "8 Park Plaza, Boston, MA 02116",
-    "image_url": "/images/pf-changs.jpg",
-    "open_time": "11:00:00",
-    "close_time": "22:00:00"
+    "name": "Loco Bar",
+    "slogan": "South Boston's Favorite Neighborhood Bar",
+    "address": "1255 Hyde Park Ave, Hyde Park, MA 02136",
+    "image_url": "/images/restaurants/loco.jpeg",
+    "open_time": "15:00:00",
+    "close_time": "02:00:00"
   },
   {
-    "name": "Boston Beer Works",
-    "slogan": "Brewpub with Boston Brews",
-    "address": "61 Brookline Ave, Boston, MA 02215",
-    "image_url": "/images/boston-beer-works.jpg",
+    "name": "Joe's on Newbury",
+    "slogan": "Newbury Street Bar & Kitchen",
+    "address": "1 Newbury St, Boston, MA 02116",
+    "image_url": "/images/restaurants/joes.png",
     "open_time": "11:00:00",
-    "close_time": "23:00:00"
+    "close_time": "02:00:00"
   },
   {
-    "name": "The North End",
-    "slogan": "Italian Cuisine in the Heart of Boston",
-    "address": "123 Hanover St, Boston, MA 02113",
-    "image_url": "/images/north-end.jpg",
-    "open_time": "12:00:00",
-    "close_time": "23:00:00"
+    "name": "Bell in Hand",
+    "slogan": "Boston's Oldest Tavern Since 1795",
+    "address": "45 Union St, Boston, MA 02108",
+    "image_url": "/images/restaurants/bellinhand.jpeg",
+    "open_time": "11:00:00",
+    "close_time": "02:00:00"
   }
 ]

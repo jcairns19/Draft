@@ -86,13 +86,22 @@ const RestaurantDetail = () => {
               <div className="menu-items">
                 {items.map((item) => (
                   <div key={item.id} className="menu-item">
-                    <div className="menu-item-info">
-                      <h4>{item.name}</h4>
-                      {item.abv && <span className="menu-item-abv">{item.abv}% ABV</span>}
-                      <p className="menu-item-description">{item.description}</p>
-                    </div>
-                    <div className="menu-item-price">
-                      ${item.price}
+                    {item.image_url && (
+                      <img
+                        src={`http://localhost:3000${item.image_url}`}
+                        alt={item.name}
+                        className="menu-item-image"
+                      />
+                    )}
+                    <div className="menu-item-content">
+                      <div className="menu-item-info">
+                        <h4>{item.name}</h4>
+                        {item.abv && <span className="menu-item-abv">{item.abv}% ABV</span>}
+                        <p className="menu-item-description">{item.description}</p>
+                      </div>
+                      <div className="menu-item-price">
+                        ${item.price}
+                      </div>
                     </div>
                   </div>
                 ))}
