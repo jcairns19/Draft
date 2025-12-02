@@ -4,22 +4,54 @@
   margin: 0 auto;
 }
 
-.restaurant-header {
+.restaurant-hero-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
   margin-bottom: 2rem;
 }
 
-.restaurant-hero-image {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+.restaurant-info {
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.restaurant-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
 }
 
 .restaurant-info h1 {
+  margin: 0;
   font-size: 1.8rem;
   color: #1f2937;
-  margin-bottom: 0.5rem;
+  flex: 1;
+}
+
+.status-chip {
+  padding: 0.375rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.status-chip.open {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.status-chip.closed {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
 .restaurant-slogan {

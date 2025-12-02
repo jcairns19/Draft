@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { formatTime, isOpen } from '../utils/timeUtils';
 import './Restaurants.css';
 
 const Restaurants = () => {
@@ -54,12 +55,17 @@ const Restaurants = () => {
               />
             )}
             <div className="restaurant-info">
-              <h3>{restaurant.name}</h3>
+              <div className="restaurant-header">
+                <h3>{restaurant.name}</h3>
+                <span className={`status-chip ${isOpen(restaurant.open_time, restaurant.close_time) ? 'open' : 'closed'}`}>
+                  {isOpen(restaurant.open_time, restaurant.close_time) ? 'Open' : 'Closed'}
+                </span>
+              </div>
               <p className="restaurant-slogan">{restaurant.slogan}</p>
               <p className="restaurant-address">{restaurant.address}</p>
               <div className="restaurant-hours">
-                <span>Open: {restaurant.open_time}</span>
-                <span>Close: {restaurant.close_time}</span>
+                <span>Open: {formatTime(restaurant.open_time)}</span>
+                <span>Close: {formatTime(restaurant.close_time)}</span>
               </div>
             </div>
           </Link>

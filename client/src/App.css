@@ -11,6 +11,7 @@
 
 .main-content {
   flex: 1;
+  padding-top: 5rem; /* Account for fixed header height */
 }
 
 * {

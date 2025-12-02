@@ -51,11 +51,42 @@
   padding: 1rem;
 }
 
+.restaurant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
 .restaurant-info h3 {
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   color: #1f2937;
   font-size: 1.1rem;
   line-height: 1.3;
+  flex: 1;
+}
+
+.status-chip {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.status-chip.open {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.status-chip.closed {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
 .restaurant-slogan {

@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
 import Restaurants from './pages/Restaurants';
 import RestaurantDetail from './pages/RestaurantDetail';
 import Profile from './pages/Profile';
@@ -20,6 +21,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/restaurants" element={<Restaurants />} />
               <Route path="/restaurants/:id" element={<RestaurantDetail />} />
               <Route path="/profile" element={<Profile />} />

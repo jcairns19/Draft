@@ -76,7 +76,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      // Call backend logout endpoint for logging purposes
+      await axios.post('/logout');
+    } catch (error) {
+      // Even if backend call fails, continue with client-side logout
+      console.warn('Backend logout failed, but proceeding with client-side logout:', error);
+    }
+
+    // Clear client-side state regardless of backend response
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');

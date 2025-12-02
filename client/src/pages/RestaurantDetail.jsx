@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { formatTime, isOpen } from '../utils/timeUtils';
 import './RestaurantDetail.css';
 
 const RestaurantDetail = () => {
@@ -55,22 +56,25 @@ const RestaurantDetail = () => {
 
   return (
     <div className="restaurant-detail">
-      <div className="restaurant-header">
-        {restaurant.image_url && (
-          <img
-            src={`http://localhost:3000${restaurant.image_url}`}
-            alt={restaurant.name}
-            className="restaurant-hero-image"
-          />
-        )}
-        <div className="restaurant-info">
+      {restaurant.image_url && (
+        <img
+          src={`http://localhost:3000${restaurant.image_url}`}
+          alt={restaurant.name}
+          className="restaurant-hero-image"
+        />
+      )}
+      <div className="restaurant-info">
+        <div className="restaurant-title">
           <h1>{restaurant.name}</h1>
-          <p className="restaurant-slogan">{restaurant.slogan}</p>
-          <p className="restaurant-address">{restaurant.address}</p>
-          <div className="restaurant-hours">
-            <span>Open: {restaurant.open_time}</span>
-            <span>Close: {restaurant.close_time}</span>
-          </div>
+          <span className={`status-chip ${isOpen(restaurant.open_time, restaurant.close_time) ? 'open' : 'closed'}`}>
+            {isOpen(restaurant.open_time, restaurant.close_time) ? 'Open' : 'Closed'}
+          </span>
+        </div>
+        <p className="restaurant-slogan">{restaurant.slogan}</p>
+        <p className="restaurant-address">{restaurant.address}</p>
+        <div className="restaurant-hours">
+          <span>Open: {formatTime(restaurant.open_time)}</span>
+          <span>Close: {formatTime(restaurant.close_time)}</span>
         </div>
       </div>
 
