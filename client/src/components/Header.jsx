@@ -24,13 +24,19 @@ const Header = () => {
         </Link>
 
         <nav className={`nav ${menuOpen ? 'open' : ''}`}>
+          {isAuthenticated && (
+            <Link to="/dashboard" className="nav-link" onClick={closeMenu}>
+              Dashboard
+            </Link>
+          )}
+
           <Link to="/restaurants" className="nav-link" onClick={closeMenu}>
             Restaurants
           </Link>
 
-          {isManager && (
-            <Link to="/manager/tabs" className="nav-link" onClick={closeMenu}>
-              Tabs
+          {isAuthenticated && (
+            <Link to="/tabs" className="nav-link" onClick={closeMenu}>
+              My Tabs
             </Link>
           )}
 

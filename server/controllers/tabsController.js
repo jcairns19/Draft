@@ -107,6 +107,19 @@ export async function addItemToTab(req, res) {
     }
 
     // Get updated tab data for real-time updates
+    // First, recalculate the total based on all tab items
+    const totalResult = await pool.query(
+      'SELECT SUM(sub_price) as total FROM tab_items WHERE tab_id = $1',
+      [tab_id]
+    );
+    const newTotal = parseFloat(totalResult.rows[0].total || 0);
+
+    // Update the tab total
+    await pool.query(
+      'UPDATE tabs SET total = $1 WHERE id = $2',
+      [newTotal, tab_id]
+    );
+
     const updatedTabResult = await pool.query(
       'SELECT t.id, t.user_id, t.restaurant_id, t.open_time, t.is_open, t.total FROM tabs t WHERE t.id = $1',
       [tab_id]
@@ -168,7 +181,12 @@ export async function closeTab(req, res) {
       [total, payment_method_id, tab_id]
     );
 
-    res.json({ tab: result.rows[0] });
+    const closedTab = result.rows[0];
+
+    // Emit tab update event to notify managers
+    await emitTabUpdate(tab_id, closedTab.restaurant_id, closedTab);
+
+    res.json({ tab: closedTab });
   } catch (err) {
     logger.error('Close tab error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -295,9 +313,26 @@ export async function updateTabItemServed(req, res) {
       [served, item_id, tab_id]
     );
 
+    // Get restaurant ID for the tab update
+    const tabInfo = await pool.query(
+      'SELECT restaurant_id FROM tabs WHERE id = $1',
+      [tab_id]
+    );
+    const restaurantId = tabInfo.rows[0].restaurant_id;
+
+    // Get updated tab data
+    const updatedTabResult = await pool.query(
+      'SELECT t.id, t.user_id, t.restaurant_id, t.open_time, t.is_open, t.total FROM tabs t WHERE t.id = $1',
+      [tab_id]
+    );
+    const updatedTab = updatedTabResult.rows[0];
+
     // Emit item served event to customer
     console.log(`Emitting item served event: tabId=${tab_id}, itemId=${item_id}, served=${served}`);
     await emitItemServed(tab_id, item_id, served);
+
+    // Emit tab update event to managers
+    await emitTabUpdate(tab_id, restaurantId, updatedTab);
 
     res.json({ tabItem: result.rows[0] });
   } catch (err) {

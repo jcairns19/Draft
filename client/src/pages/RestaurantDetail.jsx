@@ -16,11 +16,13 @@ const RestaurantDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [quantities, setQuantities] = useState({}); // Track quantities by menu item ID
+  const [openTab, setOpenTab] = useState(null); // Track user's open tab at this restaurant
 
   useEffect(() => {
     fetchRestaurantData();
     if (isAuthenticated) {
       fetchPaymentMethods();
+      fetchOpenTab();
     }
   }, [id, isAuthenticated]);
 
@@ -67,6 +69,15 @@ const RestaurantDetail = () => {
     } catch (error) {
       console.error('Error fetching user tabs:', error);
       return null;
+    }
+  };
+
+  const fetchOpenTab = async () => {
+    try {
+      const tab = await findExistingOpenTab();
+      setOpenTab(tab);
+    } catch (error) {
+      console.error('Error fetching open tab:', error);
     }
   };
 
@@ -121,6 +132,8 @@ const RestaurantDetail = () => {
         // Create a new tab for this order
         const tabResponse = await axios.post('/tabs', { restaurant_id: parseInt(id) });
         tabId = tabResponse.data.tab.id;
+        // Update the openTab state with the new tab
+        setOpenTab(tabResponse.data.tab);
       }
 
       // Add all items to the tab
@@ -191,6 +204,15 @@ const RestaurantDetail = () => {
           <span>Close: {formatTime(restaurant.close_time)}</span>
         </div>
       </div>
+
+      {isAuthenticated && openTab && (
+        <div className="open-tab-notice">
+          <p>You have an open tab at this restaurant.</p>
+          <button onClick={() => navigate(`/tabs/${openTab.id}`)} className="view-tab-btn">
+            View Your Tab
+          </button>
+        </div>
+      )}
 
       {isAuthenticated && paymentMethods.length === 0 && (
         <div className="payment-method-notice">

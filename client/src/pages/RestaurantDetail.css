@@ -108,8 +108,8 @@
 
 .menu-item {
   display: flex;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   background: #f9fafb;
@@ -121,10 +121,10 @@
 }
 
 .menu-item-image {
-  width: 80px;
-  height: 80px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
   flex-shrink: 0;
 }
 
@@ -133,10 +133,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 120px;
 }
 
 .menu-item-info {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  flex: 1;
 }
 
 .menu-item-info h4 {
@@ -195,14 +197,53 @@
   font-size: 0.9rem;
 }
 
-/* Tablet and up */
-@media (min-width: 768px) {
+/* Mobile */
+@media (max-width: 767px) {
   .restaurant-detail {
-    padding: 2rem;
+    padding: 1rem;
   }
 
-  .restaurant-header {
-    margin-bottom: 3rem;
+  .restaurant-hero-image {
+    height: 250px;
+  }
+
+  .restaurant-info {
+    padding: 1rem;
+  }
+
+  .order-summary {
+    padding: 1rem;
+  }
+
+  .menu-section {
+    padding: 1rem;
+  }
+
+  .menu-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .menu-item {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .menu-item-image {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 0.5rem;
+  }
+
+  .menu-item-price {
+    align-self: flex-end;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .restaurant-detail {
+    padding: 2rem;
   }
 
   .restaurant-hero-image {
@@ -224,30 +265,6 @@
 
   .menu-section h2 {
     font-size: 1.8rem;
-  }
-
-  .menu-item {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .menu-item-image {
-    width: 100%;
-    height: 120px;
-    margin-bottom: 0.5rem;
-  }
-
-  .menu-item-content {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .menu-item-info {
-    margin-bottom: 1rem;
-  }
-
-  .menu-item-price {
-    align-self: flex-end;
   }
 }
 
@@ -272,51 +289,6 @@
   .menu-category h3 {
     font-size: 1.4rem;
   }
-}
-
-/* Tab Management */
-.tab-management {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 2rem 0;
-  text-align: center;
-}
-
-.tab-button {
-  padding: 0.75rem 2rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-width: 150px;
-}
-
-.tab-button.create-tab {
-  background-color: #059669;
-  color: white;
-}
-
-.tab-button.create-tab:hover {
-  background-color: #047857;
-  transform: translateY(-1px);
-}
-
-.tab-button.view-tab {
-  background-color: #2563eb;
-  color: white;
-}
-
-.tab-button.view-tab:hover {
-  background-color: #1d4ed8;
-  transform: translateY(-1px);
-}
-
-.tab-button:active {
-  transform: translateY(0);
 }
 
 /* Menu Item Ordering */
@@ -512,4 +484,36 @@
 
 .add-payment-btn:hover {
   background-color: #d97706;
+}
+
+/* Open Tab Notice */
+.open-tab-notice {
+  background: #dbeafe;
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.open-tab-notice p {
+  color: #1e40af;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.view-tab-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.view-tab-btn:hover {
+  background-color: #2563eb;
 }

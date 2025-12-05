@@ -11,7 +11,7 @@ import RestaurantDetail from './pages/RestaurantDetail';
 import TabDetail from './pages/TabDetail';
 import AddPaymentMethod from './pages/AddPaymentMethod';
 import Profile from './pages/Profile';
-import ManagerTabs from './pages/ManagerTabs';
+import Tabs from './pages/Tabs';
 import './App.css';
 
 function App() {
@@ -32,7 +32,7 @@ function App() {
               <Route path="/tabs/:tab_id" element={<TabDetail />} />
               <Route path="/add-payment-method" element={<AddPaymentMethod />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/manager/tabs" element={<ManagerTabs />} />
+              <Route path="/tabs" element={<Tabs />} />
             </Routes>
           </main>
         </div>

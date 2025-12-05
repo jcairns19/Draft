@@ -14,6 +14,8 @@ const TabDetail = () => {
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState(null);
 
   useEffect(() => {
     fetchTabData();
@@ -37,30 +39,38 @@ const TabDetail = () => {
       console.log('Setting up socket listeners for tab', tab_id);
 
       const handleItemServed = async (data) => {
-        console.log('Received item served update:', data);
-        if (data.tabId === parseInt(tab_id)) {
-          // Fetch the latest tab data to ensure we have the most current information
+        console.log('🍽️ ITEM SERVED RECEIVED:', data);
+        if (parseInt(data.tabId) === parseInt(tab_id)) {
+          console.log('✅ Item served is for current tab, refreshing data...');
+          // Fetch the latest tab data instead of just updating local state
           try {
             const response = await axios.get(`/tabs/${tab_id}`);
+            console.log('✅ Tab data refreshed after item served:', response.data);
             setTab(response.data.tab);
             setTabItems(response.data.items || []);
           } catch (error) {
-            console.error('Error fetching updated tab data:', error);
+            console.error('❌ Error fetching updated tab data:', error);
           }
+        } else {
+          console.log('ℹ️ Item served update is for different tab, ignoring');
         }
       };
 
       const handleTabUpdated = async (data) => {
-        console.log('Received tab updated:', data);
-        if (data.tabId === parseInt(tab_id)) {
-          // Fetch the latest tab data when tab is updated
+        console.log('📱 TAB UPDATED RECEIVED:', data);
+        if (parseInt(data.tabId) === parseInt(tab_id)) {
+          console.log('🔄 Tab update is for current tab, refreshing data...');
+          // Fetch the latest tab data
           try {
             const response = await axios.get(`/tabs/${tab_id}`);
+            console.log('✅ Tab data refreshed after tab update:', response.data);
             setTab(response.data.tab);
             setTabItems(response.data.items || []);
           } catch (error) {
-            console.error('Error fetching updated tab data:', error);
+            console.error('❌ Error fetching updated tab data:', error);
           }
+        } else {
+          console.log('ℹ️ Tab update is for different tab, ignoring');
         }
       };
 
@@ -68,12 +78,12 @@ const TabDetail = () => {
       socket.on('tab_updated', handleTabUpdated);
 
       return () => {
-        console.log('Cleaning up socket listeners for tab', tab_id);
+        console.log('🧹 Cleaning up socket listeners for tab', tab_id);
         socket.off('item_served', handleItemServed);
         socket.off('tab_updated', handleTabUpdated);
       };
     } else {
-      console.log('No socket available for tab', tab_id);
+      console.log('❌ No socket available for tab', tab_id);
     }
   }, [socket, tab_id]);
 
@@ -123,10 +133,21 @@ const TabDetail = () => {
     }
 
     try {
-      await axios.put(`/tabs/${tab_id}/close`, {
+      const response = await axios.put(`/tabs/${tab_id}/close`, {
         payment_method_id: selectedPaymentMethodId
       });
-      navigate('/dashboard'); // Redirect to dashboard after closing tab
+      
+      // Store payment details for confirmation display
+      const closedTab = response.data.tab;
+      const selectedPaymentMethod = paymentMethods.find(pm => pm.id === selectedPaymentMethodId);
+      
+      setPaymentDetails({
+        tab: closedTab,
+        paymentMethod: selectedPaymentMethod,
+        items: tabItems,
+        paymentTime: new Date(closedTab.close_time)
+      });
+      setPaymentConfirmed(true);
     } catch (error) {
       setError(error.response?.data?.error || 'Failed to close tab');
       console.error('Error closing tab:', error);
@@ -156,6 +177,77 @@ const TabDetail = () => {
     return <div className="error">Tab not found</div>;
   }
 
+  // Show payment confirmation screen if tab has been paid
+  if (paymentConfirmed && paymentDetails) {
+    return (
+      <div className="payment-confirmation">
+        <div className="confirmation-header">
+          <h1>✅ Payment Successful!</h1>
+          <p>Your tab has been closed and payment processed.</p>
+        </div>
+
+        <div className="confirmation-details">
+          <div className="order-summary">
+            <h2>Order Details</h2>
+            <div className="restaurant-info">
+              <h3>{paymentDetails.tab.restaurant_name}</h3>
+              <p>Tab #{paymentDetails.tab.id}</p>
+            </div>
+            
+            <div className="order-items">
+              {paymentDetails.items.map((item) => (
+                <div key={item.id} className="order-item">
+                  <div className="item-info">
+                    <h4>{item.name}</h4>
+                    <p>Quantity: {item.quantity}</p>
+                  </div>
+                  <div className="item-price">
+                    ${(Number(item.price || 0) * Number(item.quantity || 0)).toFixed(2)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="payment-summary">
+            <h2>Payment Information</h2>
+            <div className="payment-details">
+              <div className="detail-row">
+                <span>Total Amount:</span>
+                <span className="amount">${Number(paymentDetails.tab.total || 0).toFixed(2)}</span>
+              </div>
+              <div className="detail-row">
+                <span>Payment Time:</span>
+                <span>{paymentDetails.paymentTime.toLocaleString()}</span>
+              </div>
+              <div className="detail-row">
+                <span>Payment Method:</span>
+                <span>
+                  {paymentDetails.paymentMethod?.card_brand || 'Card'} **** **** **** {paymentDetails.paymentMethod?.card_number?.slice(-4)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="confirmation-actions">
+          <button 
+            onClick={() => navigate('/dashboard')} 
+            className="action-button primary"
+          >
+            Return to Dashboard
+          </button>
+          <button 
+            onClick={() => navigate('/tabs')} 
+            className="action-button secondary"
+          >
+            View My Tabs
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="tab-detail">
       <div className="tab-header">
@@ -178,7 +270,7 @@ const TabDetail = () => {
                 <div className="item-info">
                   <h3>{item.name}</h3>
                   <p>Quantity: {item.quantity}</p>
-                  <p>Price: ${item.price?.toFixed(2)}</p>
+                  <p>Price: ${Number(item.price || 0).toFixed(2)}</p>
                   <div className="item-status">
                     <span className={`status-badge ${item.served ? 'served' : 'pending'}`}>
                       {item.served ? 'Served' : 'Pending'}
@@ -186,7 +278,7 @@ const TabDetail = () => {
                   </div>
                 </div>
                 <div className="item-total">
-                  ${(item.price * item.quantity)?.toFixed(2)}
+                  ${(Number(item.price || 0) * Number(item.quantity || 0)).toFixed(2)}
                 </div>
                 {!tab.is_open && (
                   <button 

@@ -15,16 +15,28 @@ export function setupSocketIO(io) {
   io.use(async (socket, next) => {
     try {
       const token = socket.handshake.auth.token;
+      logger.info(`Socket auth attempt - token present: ${!!token}`);
+      
       if (!token) {
+        logger.error('Socket authentication failed: No token provided');
         return next(new Error('Authentication token required'));
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-      socket.userId = decoded.id;
+      logger.info(`Attempting to verify JWT token: ${token.substring(0, 20)}...`);
+      const secret = process.env.JWT_SECRET || 'your-secret-key';
+      logger.info(`Using JWT secret: ${secret.substring(0, 10)}...`);
+      
+      const decoded = jwt.verify(token, secret);
+      logger.info(`JWT decoded successfully:`, decoded);
+      
+      socket.userId = decoded.id || decoded.userId;
       socket.userEmail = decoded.email;
+      logger.info(`Socket authenticated user: ${socket.userId} (${socket.userEmail})`);
       next();
     } catch (err) {
-      next(new Error('Invalid token'));
+      logger.error('Socket authentication failed:', err.message);
+      logger.error('Full error:', err);
+      next(new Error(`Authentication failed: ${err.message}`));
     }
   });
 
@@ -88,31 +100,63 @@ export function setupSocketIO(io) {
       }
     });
 
+    // Leave tab updates
+    socket.on('leave_tab_updates', async (tabId) => {
+      try {
+        // Verify user owns this tab (optional, but good practice)
+        const tabCheck = await pool.query(
+          'SELECT id FROM tabs WHERE id = $1 AND user_id = $2',
+          [tabId, socket.userId]
+        );
+
+        if (tabCheck.rowCount === 0) {
+          // Tab not found or doesn't belong to user, but we'll still try to leave the room
+          logger.warn(`User ${socket.userId} attempted to leave tab ${tabId} but doesn't own it`);
+        }
+
+        const roomName = `tab_${tabId}`;
+        socket.leave(roomName);
+        socket.emit('left_tab_updates', { tabId, roomName });
+        logger.info(`User ${socket.userId} left tab updates for tab ${tabId}`);
+
+      } catch (err) {
+        logger.error('Error leaving tab updates:', err);
+        socket.emit('leave_tab_error', { message: 'Failed to leave tab updates' });
+      }
+    });
+
     // Join manager tab updates for managers
     socket.on('join_manager_tabs', async () => {
+      logger.info(`🎯 join_manager_tabs called for user: ${socket.userId}`);
       try {
         // Get all restaurants managed by this user
+        logger.info(`🔍 Querying restaurants for manager_id: ${socket.userId}`);
         const restaurantsResult = await pool.query(
           'SELECT id FROM restaurants WHERE manager_id = $1',
           [socket.userId]
         );
+        logger.info(`📊 Found ${restaurantsResult.rowCount} restaurants for manager ${socket.userId}`);
 
         if (restaurantsResult.rowCount === 0) {
+          logger.warn(`⚠️ No restaurants found for manager ${socket.userId}, emitting join_manager_error`);
           socket.emit('join_manager_error', { message: 'No restaurants found for this manager' });
           return;
         }
 
         // Join manager room and restaurant-specific rooms
+        logger.info(`🏠 Joining manager_tabs room`);
         socket.join('manager_tabs');
         restaurantsResult.rows.forEach(restaurant => {
+          logger.info(`🏠 Joining restaurant_manager_${restaurant.id} room`);
           socket.join(`restaurant_manager_${restaurant.id}`);
         });
 
+        logger.info(`✅ Manager ${socket.userId} joined manager tabs for restaurants: ${restaurantsResult.rows.map(r => r.id).join(', ')}`);
         socket.emit('joined_manager_tabs', { restaurantIds: restaurantsResult.rows.map(r => r.id) });
-        logger.info(`Manager ${socket.userId} joined manager tabs updates`);
+        logger.info(`📤 Emitted joined_manager_tabs to ${socket.userId}`);
 
       } catch (err) {
-        logger.error('Error joining manager tabs:', err);
+        logger.error('❌ Error joining manager tabs:', err);
         socket.emit('join_manager_error', { message: 'Failed to join manager tabs' });
       }
     });
@@ -213,7 +257,10 @@ export async function emitTabUpdate(tabId, restaurantId, tabData) {
   }
 
   try {
+    logger.info(`🎯 Emitting tab update for tab ${tabId} at restaurant ${restaurantId}`);
+    
     // Notify customers following this tab
+    logger.info(`📤 Emitting to tab_${tabId} room`);
     ioInstance.to(`tab_${tabId}`).emit('tab_updated', {
       tabId,
       restaurantId,
@@ -222,6 +269,7 @@ export async function emitTabUpdate(tabId, restaurantId, tabData) {
     });
 
     // Notify managers of this restaurant
+    logger.info(`📤 Emitting to restaurant_manager_${restaurantId} room`);
     ioInstance.to(`restaurant_manager_${restaurantId}`).emit('manager_tab_updated', {
       tabId,
       restaurantId,
@@ -230,6 +278,7 @@ export async function emitTabUpdate(tabId, restaurantId, tabData) {
     });
 
     // Also notify all managers
+    logger.info(`📤 Emitting to manager_tabs room`);
     ioInstance.to('manager_tabs').emit('manager_tab_updated', {
       tabId,
       restaurantId,
@@ -237,7 +286,7 @@ export async function emitTabUpdate(tabId, restaurantId, tabData) {
       timestamp: new Date().toISOString()
     });
 
-    logger.info(`Emitted tab update for tab ${tabId} at restaurant ${restaurantId}`);
+    logger.info(`✅ Emitted tab update for tab ${tabId} at restaurant ${restaurantId}`);
   } catch (err) {
     logger.error('Error emitting tab update:', err);
   }

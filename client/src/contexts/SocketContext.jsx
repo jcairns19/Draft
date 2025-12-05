@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 
@@ -14,66 +14,85 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }) => {
   const { token, user, isManager } = useAuth();
-  const socketRef = useRef(null);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     if (token && user) {
       // Create socket connection
-      socketRef.current = io('http://localhost:3000', {
+      const newSocket = io('http://localhost:3000', {
         auth: {
           token: token
         }
       });
 
-      const socket = socketRef.current;
+      setSocket(newSocket);
 
-      socket.on('connect', () => {
+      newSocket.on('connect', () => {
         console.log('Connected to WebSocket server');
       });
 
-      socket.on('disconnect', () => {
+      newSocket.on('disconnect', () => {
         console.log('Disconnected from WebSocket server');
       });
 
-      socket.on('connect_error', (error) => {
+      newSocket.on('connect_error', (error) => {
         console.error('WebSocket connection error:', error);
+        if (error.message.includes('Authentication') || error.message.includes('token')) {
+          console.log('Authentication failed, disconnecting socket');
+          newSocket.disconnect();
+        }
       });
 
-      // Log all events for debugging
-      socket.onAny((event, ...args) => {
-        console.log('Socket event received:', event, args);
+      // Log all incoming socket events for debugging
+      newSocket.onAny((event, ...args) => {
+        console.log(`🔌 SOCKET EVENT RECEIVED: ${event}`, args);
       });
 
-      // Join appropriate rooms based on user type
-      if (isManager) {
-        socket.emit('join_manager_tabs');
-      }
+      // Log all outgoing socket events for debugging
+      const originalEmit = newSocket.emit;
+      newSocket.emit = function(...args) {
+        console.log(`📤 SOCKET EVENT SENT: ${args[0]}`, args.slice(1));
+        return originalEmit.apply(this, args);
+      };
+
+      // Handle authentication errors
+      newSocket.on('connect', () => {
+        console.log('✅ Connected to WebSocket server');
+        // Join appropriate rooms based on user type
+        if (isManager) {
+          console.log('👨‍💼 User is manager, emitting join_manager_tabs');
+          newSocket.emit('join_manager_tabs');
+        } else {
+          console.log('👤 User is not manager, skipping join_manager_tabs');
+        }
+      });
 
       return () => {
-        socket.disconnect();
+        newSocket.disconnect();
+        setSocket(null);
       };
-    } else if (socketRef.current) {
-      socketRef.current.disconnect();
-      socketRef.current = null;
+    } else if (socket) {
+      socket.disconnect();
+      setSocket(null);
     }
   }, [token, user, isManager]);
 
   // Method to join tab updates for customers
   const joinTabUpdates = (tabId) => {
-    if (socketRef.current) {
-      socketRef.current.emit('join_tab_updates', tabId);
+    if (socket) {
+      socket.emit('join_tab_updates', tabId);
     }
   };
 
   // Method to leave tab updates
   const leaveTabUpdates = (tabId) => {
-    if (socketRef.current) {
-      socketRef.current.emit('leave_tab_updates', tabId);
+    if (socket) {
+      socket.emit('leave_tab_updates', tabId);
     }
   };
 
   const value = {
-    socket: socketRef.current,
+    socket,
     joinTabUpdates,
     leaveTabUpdates
   };
