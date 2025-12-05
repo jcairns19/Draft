@@ -1,5 +1,6 @@
 import pool from '../database/config.js';
 import logger from '../logger.js';
+import { emitTabUpdate, emitItemServed } from '../socket.js';
 
 /**
  * Creates a new tab for a user at a restaurant.
@@ -34,7 +35,12 @@ export async function createTab(req, res) {
       [user_id, restaurant_id]
     );
 
-    res.status(201).json({ tab: result.rows[0] });
+    const newTab = result.rows[0];
+
+    // Emit tab update event
+    await emitTabUpdate(newTab.id, restaurant_id, newTab);
+
+    res.status(201).json({ tab: newTab });
   } catch (err) {
     logger.error('Create tab error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -74,7 +80,7 @@ export async function addItemToTab(req, res) {
       return res.status(400).json({ error: 'Menu item not available at this restaurant' });
     }
 
-    const itemPrice = itemCheck.rows[0].price;
+    const itemPrice = parseFloat(itemCheck.rows[0].price);
 
     // Check if item already exists in tab
     const existingItem = await pool.query(
@@ -99,6 +105,17 @@ export async function addItemToTab(req, res) {
         [tab_id, menu_item_id, quantity, subPrice]
       );
     }
+
+    // Get updated tab data for real-time updates
+    const updatedTabResult = await pool.query(
+      'SELECT t.id, t.user_id, t.restaurant_id, t.open_time, t.is_open, t.total FROM tabs t WHERE t.id = $1',
+      [tab_id]
+    );
+
+    const updatedTab = updatedTabResult.rows[0];
+
+    // Emit tab update event
+    await emitTabUpdate(tab_id, restaurant_id, updatedTab);
 
     res.json({ tabItem: result.rows[0] });
   } catch (err) {
@@ -168,11 +185,28 @@ export async function getUserTabs(req, res) {
   const user_id = req.user.id;
 
   try {
-    const result = await pool.query(
+    // Get all tabs for the user
+    const tabsResult = await pool.query(
       'SELECT id, user_id, restaurant_id, payment_method_id, open_time, close_time, is_open, total, created_at FROM tabs WHERE user_id = $1 ORDER BY created_at DESC',
       [user_id]
     );
-    res.json({ tabs: result.rows });
+
+    // Calculate total for each tab from its items
+    const tabsWithTotals = await Promise.all(
+      tabsResult.rows.map(async (tab) => {
+        const itemsResult = await pool.query(
+          'SELECT sub_price FROM tab_items WHERE tab_id = $1',
+          [tab.id]
+        );
+        const calculatedTotal = itemsResult.rows.reduce((sum, item) => sum + parseFloat(item.sub_price), 0);
+        return {
+          ...tab,
+          total: calculatedTotal
+        };
+      })
+    );
+
+    res.json({ tabs: tabsWithTotals });
   } catch (err) {
     logger.error('Get user tabs error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -201,16 +235,73 @@ export async function getTab(req, res) {
 
     // Get tab items with menu item details
     const itemsResult = await pool.query(
-      'SELECT ti.id, ti.quantity, ti.sub_price, mi.name, mi.type, mi.price FROM tab_items ti JOIN menu_items mi ON ti.menu_item_id = mi.id WHERE ti.tab_id = $1 ORDER BY ti.created_at',
+      'SELECT ti.id, ti.quantity, ti.sub_price, ti.served, mi.name, mi.type, mi.price FROM tab_items ti JOIN menu_items mi ON ti.menu_item_id = mi.id WHERE ti.tab_id = $1 ORDER BY ti.created_at',
       [tab_id]
     );
 
+    // Parse numeric fields
+    const items = itemsResult.rows.map(item => ({
+      ...item,
+      price: parseFloat(item.price),
+      sub_price: parseFloat(item.sub_price),
+      quantity: parseInt(item.quantity),
+      served: Boolean(item.served)
+    }));
+
+    // Calculate total from tab items
+    const calculatedTotal = items.reduce((sum, item) => sum + item.sub_price, 0);
+
+    // Update tab with calculated total
+    const tab = {
+      ...tabResult.rows[0],
+      total: calculatedTotal
+    };
+
     res.json({
-      tab: tabResult.rows[0],
-      items: itemsResult.rows
+      tab: tab,
+      items: items
     });
   } catch (err) {
     logger.error('Get tab error', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+/**
+ * Updates the served status of a tab item.
+ * @param {Object} req - Express request object with params.tab_item_id and body.served
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>} Sends JSON response with updated tab item or error
+ */
+export async function updateTabItemServed(req, res) {
+  const { tab_id, item_id } = req.params;
+  const { served } = req.body;
+  const user_id = req.user.id;
+
+  try {
+    // First verify the user is the manager of the restaurant that this tab belongs to
+    const managerCheck = await pool.query(
+      'SELECT r.id FROM tab_items ti JOIN tabs t ON ti.tab_id = t.id JOIN restaurants r ON t.restaurant_id = r.id WHERE ti.id = $1 AND t.id = $2 AND r.manager_id = $3',
+      [item_id, tab_id, user_id]
+    );
+
+    if (managerCheck.rowCount === 0) {
+      return res.status(403).json({ error: 'Access denied. Only restaurant managers can update served status.' });
+    }
+
+    // Update the served status
+    const result = await pool.query(
+      'UPDATE tab_items SET served = $1 WHERE id = $2 AND tab_id = $3 RETURNING id, tab_id, menu_item_id, quantity, sub_price, served',
+      [served, item_id, tab_id]
+    );
+
+    // Emit item served event to customer
+    console.log(`Emitting item served event: tabId=${tab_id}, itemId=${item_id}, served=${served}`);
+    await emitItemServed(tab_id, item_id, served);
+
+    res.json({ tabItem: result.rows[0] });
+  } catch (err) {
+    logger.error('Update tab item served error', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

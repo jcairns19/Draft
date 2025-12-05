@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import './Profile.css';
@@ -22,6 +23,22 @@ const Profile = () => {
       console.error('Error fetching payment methods:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeletePaymentMethod = async (paymentMethodId) => {
+    if (window.confirm('Are you sure you want to delete this payment method? This action cannot be undone.')) {
+      try {
+        setLoading(true);
+        await axios.delete(`/payment-methods/${paymentMethodId}`);
+        // Refresh payment methods list
+        await fetchPaymentMethods();
+      } catch (error) {
+        setError(error.response?.data?.error || 'Failed to delete payment method');
+        console.error('Error deleting payment method:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -50,7 +67,12 @@ const Profile = () => {
         </div>
 
         <div className="payment-methods">
-          <h2>Payment Methods</h2>
+          <div className="section-header">
+            <h2>Payment Methods</h2>
+            <Link to="/add-payment-method" className="add-button">
+              +
+            </Link>
+          </div>
 
           {error && <div className="error">{error}</div>}
 
@@ -65,9 +87,20 @@ const Profile = () => {
                     <span className="card-number">**** **** **** {method.card_number.slice(-4)}</span>
                     <span className="card-holder">{method.card_holder_name}</span>
                   </div>
-                  {method.is_default && (
-                    <span className="default-badge">Default</span>
-                  )}
+                  <div className="payment-method-actions">
+                    {method.is_default && (
+                      <span className="default-badge">Default</span>
+                    )}
+                    <div className="action-buttons">
+                      <button
+                        onClick={() => handleDeletePaymentMethod(method.id)}
+                        className="delete-button"
+                        disabled={loading}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

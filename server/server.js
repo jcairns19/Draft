@@ -10,12 +10,23 @@ import { requestLogger } from './middleware/requestLogger.js';
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+
+// Parse CORS origins from environment variable
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : ['http://localhost:5173', 'http://localhost:3000'];
+
+const io = new Server(server, {
+  cors: {
+    origin: corsOrigins,
+    credentials: true
+  }
+});
 const port = process.env.PORT || 3000;
 
 // CORS configuration
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'], // Allow Vite dev server and production
+  origin: corsOrigins,
   credentials: true
 }));
 

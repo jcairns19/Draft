@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
+  const [isManager, setIsManager] = useState(false);
 
   // Configure axios defaults
   axios.defaults.baseURL = 'http://localhost:3000/api';
@@ -35,6 +36,8 @@ export const AuthProvider = ({ children }) => {
         try {
           const response = await axios.get('/me');
           setUser(response.data.user);
+          // Check if user is a manager
+          await checkIfManager();
         } catch (error) {
           // Token is invalid, clear it
           logout();
@@ -54,6 +57,9 @@ export const AuthProvider = ({ children }) => {
       setToken(newToken);
       setUser(userData);
       localStorage.setItem('token', newToken);
+
+      // Check if user is a manager
+      await checkIfManager();
 
       return { success: true };
     } catch (error) {
@@ -88,8 +94,20 @@ export const AuthProvider = ({ children }) => {
     // Clear client-side state regardless of backend response
     setUser(null);
     setToken(null);
+    setIsManager(false);
     localStorage.removeItem('token');
     delete axios.defaults.headers.common['Authorization'];
+  };
+
+  const checkIfManager = async () => {
+    if (!token) return;
+    try {
+      const response = await axios.get('/restaurants/my-restaurants');
+      setIsManager(response.data.isManager);
+    } catch (error) {
+      console.error('Error checking manager status:', error);
+      setIsManager(false);
+    }
   };
 
   const value = {
@@ -99,7 +117,8 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    isManager
   };
 
   return (

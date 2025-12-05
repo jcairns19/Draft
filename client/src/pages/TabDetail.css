@@ -1,0 +1,311 @@
+.tab-detail {
+  padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tab-header {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.tab-header h1 {
+  font-size: 1.8rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.tab-info {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tab-info p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.tab-items {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.tab-items h2 {
+  font-size: 1.5rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+}
+
+.items-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.tab-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #f9fafb;
+  gap: 1rem;
+}
+
+.item-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.item-info p {
+  margin: 0.25rem 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.item-total {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #059669;
+}
+
+/* Served Status */
+.tab-item.served {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.tab-item.pending {
+  background: #fefce8;
+  border-color: #fde68a;
+}
+
+.item-status {
+  margin-top: 0.5rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.served {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.serve-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-left: 1rem;
+}
+
+.serve-btn.serve {
+  background-color: #059669;
+  color: white;
+}
+
+.serve-btn.serve:hover {
+  background-color: #047857;
+}
+
+.serve-btn.unserve {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.serve-btn.unserve:hover {
+  background-color: #d97706;
+}
+
+.no-items {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 2rem;
+}
+
+.tab-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.action-button {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 150px;
+}
+
+.action-button.primary {
+  background-color: #dc2626;
+  color: white;
+}
+
+.action-button.primary:hover {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.action-button.secondary {
+  background-color: #6b7280;
+  color: white;
+}
+
+.action-button.secondary:hover {
+  background-color: #4b5563;
+  transform: translateY(-1px);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.error {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #dc2626;
+  background-color: #fef2f2;
+  border-radius: 8px;
+  margin: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Payment Method Selection */
+.payment-method-selection {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.payment-method-selection h3 {
+  font-size: 1.3rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.payment-methods-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.payment-method-option:hover {
+  border-color: #059669;
+}
+
+.payment-method-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #059669;
+}
+
+.payment-method-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.card-brand {
+  font-weight: 600;
+  color: #1f2937;
+  text-transform: capitalize;
+}
+
+.card-number {
+  color: #6b7280;
+  font-family: monospace;
+}
+
+.card-expiry {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.default-badge {
+  background-color: #059669;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.no-payment-methods {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.no-payment-methods p {
+  margin-bottom: 1rem;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .tab-detail {
+    padding: 2rem;
+  }
+
+  .tab-header {
+    padding: 2rem;
+  }
+
+  .tab-items {
+    padding: 2rem;
+  }
+
+  .tab-actions {
+    justify-content: flex-end;
+  }
+}

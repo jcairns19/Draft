@@ -2,11 +2,15 @@ import jwt from 'jsonwebtoken';
 import pool from './database/config.js';
 import logger from './logger.js';
 
+// Store io instance for emit functions
+let ioInstance = null;
+
 /**
  * Sets up Socket.IO functionality for restaurant chat rooms
  * @param {Server} io - Socket.IO server instance
  */
 export function setupSocketIO(io) {
+  ioInstance = io;
   // Socket.io authentication middleware
   io.use(async (socket, next) => {
     try {
@@ -56,6 +60,60 @@ export function setupSocketIO(io) {
       } catch (err) {
         logger.error('Error joining restaurant chat:', err);
         socket.emit('join_error', { message: 'Failed to join chat room' });
+      }
+    });
+
+    // Join tab updates for customers
+    socket.on('join_tab_updates', async (tabId) => {
+      try {
+        // Verify user owns this tab
+        const tabCheck = await pool.query(
+          'SELECT id, restaurant_id FROM tabs WHERE id = $1 AND user_id = $2',
+          [tabId, socket.userId]
+        );
+
+        if (tabCheck.rowCount === 0) {
+          socket.emit('join_tab_error', { message: 'Tab not found or access denied' });
+          return;
+        }
+
+        const roomName = `tab_${tabId}`;
+        socket.join(roomName);
+        socket.emit('joined_tab_updates', { tabId, roomName });
+        logger.info(`User ${socket.userId} joined tab updates for tab ${tabId}`);
+
+      } catch (err) {
+        logger.error('Error joining tab updates:', err);
+        socket.emit('join_tab_error', { message: 'Failed to join tab updates' });
+      }
+    });
+
+    // Join manager tab updates for managers
+    socket.on('join_manager_tabs', async () => {
+      try {
+        // Get all restaurants managed by this user
+        const restaurantsResult = await pool.query(
+          'SELECT id FROM restaurants WHERE manager_id = $1',
+          [socket.userId]
+        );
+
+        if (restaurantsResult.rowCount === 0) {
+          socket.emit('join_manager_error', { message: 'No restaurants found for this manager' });
+          return;
+        }
+
+        // Join manager room and restaurant-specific rooms
+        socket.join('manager_tabs');
+        restaurantsResult.rows.forEach(restaurant => {
+          socket.join(`restaurant_manager_${restaurant.id}`);
+        });
+
+        socket.emit('joined_manager_tabs', { restaurantIds: restaurantsResult.rows.map(r => r.id) });
+        logger.info(`Manager ${socket.userId} joined manager tabs updates`);
+
+      } catch (err) {
+        logger.error('Error joining manager tabs:', err);
+        socket.emit('join_manager_error', { message: 'Failed to join manager tabs' });
       }
     });
 
@@ -145,5 +203,72 @@ async function checkUserCanJoinChat(userId, restaurantId) {
   } catch (err) {
     logger.error('Error checking user chat eligibility:', err);
     return false;
+  }
+}
+
+export async function emitTabUpdate(tabId, restaurantId, tabData) {
+  if (!ioInstance) {
+    logger.error('Socket.IO not initialized');
+    return;
+  }
+
+  try {
+    // Notify customers following this tab
+    ioInstance.to(`tab_${tabId}`).emit('tab_updated', {
+      tabId,
+      restaurantId,
+      tab: tabData,
+      timestamp: new Date().toISOString()
+    });
+
+    // Notify managers of this restaurant
+    ioInstance.to(`restaurant_manager_${restaurantId}`).emit('manager_tab_updated', {
+      tabId,
+      restaurantId,
+      tab: tabData,
+      timestamp: new Date().toISOString()
+    });
+
+    // Also notify all managers
+    ioInstance.to('manager_tabs').emit('manager_tab_updated', {
+      tabId,
+      restaurantId,
+      tab: tabData,
+      timestamp: new Date().toISOString()
+    });
+
+    logger.info(`Emitted tab update for tab ${tabId} at restaurant ${restaurantId}`);
+  } catch (err) {
+    logger.error('Error emitting tab update:', err);
+  }
+}
+
+/**
+ * Emits item served update to customer
+ * @param {number} tabId - Tab ID
+ * @param {number} itemId - Tab item ID that was served
+ * @param {boolean} served - New served status
+ */
+export async function emitItemServed(tabId, itemId, served) {
+  logger.info(`emitItemServed called: tabId=${tabId}, itemId=${itemId}, served=${served}, ioInstance=${!!ioInstance}`);
+
+  if (!ioInstance) {
+    logger.error('Socket.IO not initialized');
+    return;
+  }
+
+  try {
+    // Notify customer following this tab
+    logger.info(`Emitting to room: tab_${tabId}`);
+    ioInstance.to(`tab_${tabId}`).emit('item_served', {
+      tabId,
+      itemId,
+      served,
+      timestamp: new Date().toISOString()
+    });
+
+    logger.info(`Emitted item served update for item ${itemId} on tab ${tabId}`);
+  } catch (err) {
+    logger.error('Error emitting item served:', err);
   }
 }

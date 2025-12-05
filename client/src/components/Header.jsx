@@ -4,7 +4,7 @@ import { useState } from 'react';
 import './Header.css';
 
 const Header = () => {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, isManager } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -27,6 +27,12 @@ const Header = () => {
           <Link to="/restaurants" className="nav-link" onClick={closeMenu}>
             Restaurants
           </Link>
+
+          {isManager && (
+            <Link to="/manager/tabs" className="nav-link" onClick={closeMenu}>
+              Tabs
+            </Link>
+          )}
 
           {isAuthenticated ? (
             <>

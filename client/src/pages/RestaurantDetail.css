@@ -273,3 +273,243 @@
     font-size: 1.4rem;
   }
 }
+
+/* Tab Management */
+.tab-management {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.tab-button {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 150px;
+}
+
+.tab-button.create-tab {
+  background-color: #059669;
+  color: white;
+}
+
+.tab-button.create-tab:hover {
+  background-color: #047857;
+  transform: translateY(-1px);
+}
+
+.tab-button.view-tab {
+  background-color: #2563eb;
+  color: white;
+}
+
+.tab-button.view-tab:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.tab-button:active {
+  transform: translateY(0);
+}
+
+/* Menu Item Ordering */
+.menu-item-order {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  color: #374151;
+  transition: background-color 0.2s;
+}
+
+.quantity-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.quantity-input {
+  width: 60px;
+  padding: 0.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.add-to-order-btn {
+  background-color: #059669;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-to-order-btn:hover {
+  background-color: #047857;
+}
+
+/* Order Summary */
+.order-summary {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 2rem 0;
+  border: 2px solid #059669;
+}
+
+.order-summary h3 {
+  font-size: 1.3rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.order-items {
+  margin-bottom: 1rem;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.order-item-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.order-item-quantity {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.order-item-price {
+  font-weight: 600;
+  color: #059669;
+}
+
+.remove-item-btn {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.remove-item-btn:hover {
+  background-color: #fef2f2;
+}
+
+.order-total {
+  text-align: right;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e5e7eb;
+}
+
+.submit-order-btn {
+  width: 100%;
+  background-color: #059669;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-order-btn:hover:not(:disabled) {
+  background-color: #047857;
+}
+
+.submit-order-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Payment Method Notice */
+.payment-method-notice {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.payment-method-notice p {
+  color: #92400e;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.add-payment-btn {
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-payment-btn:hover {
+  background-color: #d97706;
+}

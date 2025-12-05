@@ -52,8 +52,11 @@ CREATE TABLE IF NOT EXISTS restaurants (
   image_url TEXT,
   open_time TIME,
   close_time TIME,
+  manager_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_restaurants_manager_id ON restaurants(manager_id);
 
 -- Menu items table
 -- Stores menu items for each restaurant.
@@ -94,6 +97,7 @@ CREATE TABLE IF NOT EXISTS tab_items (
   menu_item_id INTEGER REFERENCES menu_items(id) ON DELETE CASCADE,
   quantity INTEGER NOT NULL DEFAULT 1,
   sub_price DECIMAL(10,2) NOT NULL,  -- menu_item.price * quantity
+  served BOOLEAN DEFAULT FALSE,  -- Track if item has been served to customer
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
