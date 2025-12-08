@@ -1,4 +1,4 @@
-import pool from '../database/config.js';
+import models from '../database/models/index.js';
 import logger from '../logger.js';
 import { emitTabUpdate, emitItemServed } from '../socket.js';
 
@@ -15,27 +15,28 @@ export async function createTab(req, res) {
 
   try {
     // Check if restaurant exists
-    const restaurantCheck = await pool.query('SELECT id FROM restaurants WHERE id = $1', [restaurant_id]);
-    if (restaurantCheck.rowCount === 0) {
+    const restaurant = await models.Restaurant.findByPk(restaurant_id);
+    if (!restaurant) {
       return res.status(404).json({ error: 'Restaurant not found' });
     }
 
     // Check if user already has an open tab at this restaurant
-    const existingTab = await pool.query(
-      'SELECT id FROM tabs WHERE user_id = $1 AND restaurant_id = $2 AND is_open = true',
-      [user_id, restaurant_id]
-    );
-    if (existingTab.rowCount > 0) {
+    const existingTab = await models.Tab.findOne({
+      where: {
+        user_id: user_id,
+        restaurant_id: restaurant_id,
+        is_open: true
+      }
+    });
+    if (existingTab) {
       return res.status(400).json({ error: 'You already have an open tab at this restaurant' });
     }
 
     // Create new tab
-    const result = await pool.query(
-      'INSERT INTO tabs (user_id, restaurant_id) VALUES ($1, $2) RETURNING id, user_id, restaurant_id, open_time, is_open, total',
-      [user_id, restaurant_id]
-    );
-
-    const newTab = result.rows[0];
+    const newTab = await models.Tab.create({
+      user_id: user_id,
+      restaurant_id: restaurant_id
+    });
 
     // Emit tab update event
     await emitTabUpdate(newTab.id, restaurant_id, newTab);
@@ -61,76 +62,78 @@ export async function addItemToTab(req, res) {
 
   try {
     // Check if tab exists, is open, and belongs to user
-    const tabCheck = await pool.query(
-      'SELECT id, restaurant_id FROM tabs WHERE id = $1 AND user_id = $2 AND is_open = true',
-      [tab_id, user_id]
-    );
-    if (tabCheck.rowCount === 0) {
+    const tab = await models.Tab.findOne({
+      where: {
+        id: tab_id,
+        user_id: user_id,
+        is_open: true
+      }
+    });
+    if (!tab) {
       return res.status(404).json({ error: 'Tab not found or not accessible' });
     }
 
-    const restaurant_id = tabCheck.rows[0].restaurant_id;
+    const restaurant_id = tab.restaurant_id;
 
     // Check if menu item exists and is available at this restaurant
-    const itemCheck = await pool.query(
-      'SELECT mi.id, mi.price FROM menu_items mi JOIN restaurant_menu_items rmi ON mi.id = rmi.menu_item_id WHERE mi.id = $1 AND rmi.restaurant_id = $2 AND rmi.is_available = true',
-      [menu_item_id, restaurant_id]
-    );
-    if (itemCheck.rowCount === 0) {
+    const menuItem = await models.MenuItem.findOne({
+      include: [{
+        model: models.RestaurantMenuItem,
+        where: {
+          restaurant_id: restaurant_id,
+          is_available: true
+        },
+        required: true
+      }],
+      where: { id: menu_item_id }
+    });
+    if (!menuItem) {
       return res.status(400).json({ error: 'Menu item not available at this restaurant' });
     }
 
-    const itemPrice = parseFloat(itemCheck.rows[0].price);
+    const itemPrice = parseFloat(menuItem.price);
 
     // Check if item already exists in tab
-    const existingItem = await pool.query(
-      'SELECT id, quantity FROM tab_items WHERE tab_id = $1 AND menu_item_id = $2',
-      [tab_id, menu_item_id]
-    );
+    const existingItem = await models.TabItem.findOne({
+      where: {
+        tab_id: tab_id,
+        menu_item_id: menu_item_id
+      }
+    });
 
     let result;
-    if (existingItem.rowCount > 0) {
+    if (existingItem) {
       // Update existing item quantity
-      const newQuantity = existingItem.rows[0].quantity + quantity;
+      const newQuantity = existingItem.quantity + quantity;
       const newSubPrice = itemPrice * newQuantity;
-      result = await pool.query(
-        'UPDATE tab_items SET quantity = $1, sub_price = $2 WHERE id = $3 RETURNING id, tab_id, menu_item_id, quantity, sub_price',
-        [newQuantity, newSubPrice, existingItem.rows[0].id]
-      );
+      result = await existingItem.update({
+        quantity: newQuantity,
+        sub_price: newSubPrice
+      });
     } else {
       // Insert new tab item
       const subPrice = itemPrice * quantity;
-      result = await pool.query(
-        'INSERT INTO tab_items (tab_id, menu_item_id, quantity, sub_price) VALUES ($1, $2, $3, $4) RETURNING id, tab_id, menu_item_id, quantity, sub_price',
-        [tab_id, menu_item_id, quantity, subPrice]
-      );
+      result = await models.TabItem.create({
+        tab_id: tab_id,
+        menu_item_id: menu_item_id,
+        quantity: quantity,
+        sub_price: subPrice
+      });
     }
 
-    // Get updated tab data for real-time updates
-    // First, recalculate the total based on all tab items
-    const totalResult = await pool.query(
-      'SELECT SUM(sub_price) as total FROM tab_items WHERE tab_id = $1',
-      [tab_id]
-    );
-    const newTotal = parseFloat(totalResult.rows[0].total || 0);
+    // Recalculate the total based on all tab items
+    const totalResult = await models.TabItem.sum('sub_price', {
+      where: { tab_id: tab_id }
+    });
+    const newTotal = parseFloat(totalResult || 0);
 
     // Update the tab total
-    await pool.query(
-      'UPDATE tabs SET total = $1 WHERE id = $2',
-      [newTotal, tab_id]
-    );
-
-    const updatedTabResult = await pool.query(
-      'SELECT t.id, t.user_id, t.restaurant_id, t.open_time, t.is_open, t.total FROM tabs t WHERE t.id = $1',
-      [tab_id]
-    );
-
-    const updatedTab = updatedTabResult.rows[0];
+    await tab.update({ total: newTotal });
 
     // Emit tab update event
-    await emitTabUpdate(tab_id, restaurant_id, updatedTab);
+    await emitTabUpdate(tab_id, restaurant_id, tab);
 
-    res.json({ tabItem: result.rows[0] });
+    res.json({ tabItem: result });
   } catch (err) {
     logger.error('Add item to tab error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -151,37 +154,40 @@ export async function closeTab(req, res) {
 
   try {
     // Check if tab exists, is open, and belongs to user
-    const tabCheck = await pool.query(
-      'SELECT id FROM tabs WHERE id = $1 AND user_id = $2 AND is_open = true',
-      [tab_id, user_id]
-    );
-    if (tabCheck.rowCount === 0) {
+    const tab = await models.Tab.findOne({
+      where: {
+        id: tab_id,
+        user_id: user_id,
+        is_open: true
+      }
+    });
+    if (!tab) {
       return res.status(404).json({ error: 'Tab not found or already closed' });
     }
 
     // Check if payment method belongs to user
-    const paymentCheck = await pool.query(
-      'SELECT id FROM payment_methods WHERE id = $1 AND user_id = $2',
-      [payment_method_id, user_id]
-    );
-    if (paymentCheck.rowCount === 0) {
+    const paymentMethod = await models.PaymentMethod.findOne({
+      where: {
+        id: payment_method_id,
+        user_id: user_id
+      }
+    });
+    if (!paymentMethod) {
       return res.status(400).json({ error: 'Payment method not found or not accessible' });
     }
 
     // Calculate total from tab items
-    const totalResult = await pool.query(
-      'SELECT SUM(sub_price) as total FROM tab_items WHERE tab_id = $1',
-      [tab_id]
-    );
-    const total = totalResult.rows[0].total || 0;
+    const total = await models.TabItem.sum('sub_price', {
+      where: { tab_id: tab_id }
+    }) || 0;
 
     // Close the tab
-    const result = await pool.query(
-      'UPDATE tabs SET close_time = CURRENT_TIMESTAMP, is_open = false, total = $1, payment_method_id = $2 WHERE id = $3 RETURNING id, user_id, restaurant_id, open_time, close_time, is_open, total, payment_method_id',
-      [total, payment_method_id, tab_id]
-    );
-
-    const closedTab = result.rows[0];
+    const closedTab = await tab.update({
+      close_time: new Date(),
+      is_open: false,
+      total: total,
+      payment_method_id: payment_method_id
+    });
 
     // Emit tab update event to notify managers
     await emitTabUpdate(tab_id, closedTab.restaurant_id, closedTab);
@@ -203,26 +209,26 @@ export async function getUserTabs(req, res) {
   const user_id = req.user.id;
 
   try {
-    // Get all tabs for the user
-    const tabsResult = await pool.query(
-      'SELECT id, user_id, restaurant_id, payment_method_id, open_time, close_time, is_open, total, created_at FROM tabs WHERE user_id = $1 ORDER BY created_at DESC',
-      [user_id]
-    );
+    // Get all tabs for the user with their items to calculate totals
+    const tabs = await models.Tab.findAll({
+      where: { user_id: user_id },
+      include: [{
+        model: models.TabItem,
+        attributes: ['sub_price']
+      }],
+      order: [['created_at', 'DESC']]
+    });
 
     // Calculate total for each tab from its items
-    const tabsWithTotals = await Promise.all(
-      tabsResult.rows.map(async (tab) => {
-        const itemsResult = await pool.query(
-          'SELECT sub_price FROM tab_items WHERE tab_id = $1',
-          [tab.id]
-        );
-        const calculatedTotal = itemsResult.rows.reduce((sum, item) => sum + parseFloat(item.sub_price), 0);
-        return {
-          ...tab,
-          total: calculatedTotal
-        };
-      })
-    );
+    const tabsWithTotals = tabs.map(tab => {
+      const calculatedTotal = tab.TabItems.reduce((sum, item) => sum + parseFloat(item.sub_price), 0);
+      const tabData = tab.toJSON();
+      delete tabData.TabItems; // Remove the included items from response
+      return {
+        ...tabData,
+        total: calculatedTotal
+      };
+    });
 
     res.json({ tabs: tabsWithTotals });
   } catch (err) {
@@ -242,41 +248,62 @@ export async function getTab(req, res) {
   const user_id = req.user.id;
 
   try {
-    // Get tab info
-    const tabResult = await pool.query(
-      'SELECT t.id, t.user_id, t.restaurant_id, t.payment_method_id, t.open_time, t.close_time, t.is_open, t.total, t.created_at, r.name as restaurant_name FROM tabs t JOIN restaurants r ON t.restaurant_id = r.id WHERE t.id = $1 AND t.user_id = $2',
-      [tab_id, user_id]
-    );
-    if (tabResult.rowCount === 0) {
+    // Get tab info with restaurant name and tab items
+    const tab = await models.Tab.findOne({
+      where: {
+        id: tab_id,
+        user_id: user_id
+      },
+      include: [
+        {
+          model: models.Restaurant,
+          attributes: ['name']
+        },
+        {
+          model: models.TabItem,
+          include: [{
+            model: models.MenuItem,
+            attributes: ['name', 'type', 'price']
+          }],
+          order: [['created_at', 'ASC']]
+        }
+      ]
+    });
+
+    if (!tab) {
       return res.status(404).json({ error: 'Tab not found' });
     }
 
-    // Get tab items with menu item details
-    const itemsResult = await pool.query(
-      'SELECT ti.id, ti.quantity, ti.sub_price, ti.served, mi.name, mi.type, mi.price FROM tab_items ti JOIN menu_items mi ON ti.menu_item_id = mi.id WHERE ti.tab_id = $1 ORDER BY ti.created_at',
-      [tab_id]
-    );
-
-    // Parse numeric fields
-    const items = itemsResult.rows.map(item => ({
-      ...item,
-      price: parseFloat(item.price),
-      sub_price: parseFloat(item.sub_price),
+    // Parse numeric fields and calculate total
+    const items = tab.TabItems.map(item => ({
+      id: item.id,
       quantity: parseInt(item.quantity),
-      served: Boolean(item.served)
+      sub_price: parseFloat(item.sub_price),
+      served: Boolean(item.served),
+      name: item.MenuItem.name,
+      type: item.MenuItem.type,
+      price: parseFloat(item.MenuItem.price)
     }));
 
     // Calculate total from tab items
     const calculatedTotal = items.reduce((sum, item) => sum + item.sub_price, 0);
 
-    // Update tab with calculated total
-    const tab = {
-      ...tabResult.rows[0],
-      total: calculatedTotal
+    // Prepare tab data
+    const tabData = {
+      id: tab.id,
+      user_id: tab.user_id,
+      restaurant_id: tab.restaurant_id,
+      payment_method_id: tab.payment_method_id,
+      open_time: tab.open_time,
+      close_time: tab.close_time,
+      is_open: tab.is_open,
+      total: calculatedTotal,
+      created_at: tab.created_at,
+      restaurant_name: tab.Restaurant.name
     };
 
     res.json({
-      tab: tab,
+      tab: tabData,
       items: items
     });
   } catch (err) {
@@ -298,34 +325,33 @@ export async function updateTabItemServed(req, res) {
 
   try {
     // First verify the user is the manager of the restaurant that this tab belongs to
-    const managerCheck = await pool.query(
-      'SELECT r.id FROM tab_items ti JOIN tabs t ON ti.tab_id = t.id JOIN restaurants r ON t.restaurant_id = r.id WHERE ti.id = $1 AND t.id = $2 AND r.manager_id = $3',
-      [item_id, tab_id, user_id]
-    );
+    const tabItem = await models.TabItem.findOne({
+      where: { id: item_id, tab_id: tab_id },
+      include: [{
+        model: models.Tab,
+        include: [{
+          model: models.Restaurant,
+          where: { manager_id: user_id },
+          required: true
+        }],
+        required: true
+      }],
+      required: true
+    });
 
-    if (managerCheck.rowCount === 0) {
+    if (!tabItem) {
       return res.status(403).json({ error: 'Access denied. Only restaurant managers can update served status.' });
     }
 
     // Update the served status
-    const result = await pool.query(
-      'UPDATE tab_items SET served = $1 WHERE id = $2 AND tab_id = $3 RETURNING id, tab_id, menu_item_id, quantity, sub_price, served',
-      [served, item_id, tab_id]
-    );
+    const updatedItem = await tabItem.update({ served: served });
 
-    // Get restaurant ID for the tab update
-    const tabInfo = await pool.query(
-      'SELECT restaurant_id FROM tabs WHERE id = $1',
-      [tab_id]
-    );
-    const restaurantId = tabInfo.rows[0].restaurant_id;
+    const restaurantId = tabItem.Tab.restaurant_id;
 
     // Get updated tab data
-    const updatedTabResult = await pool.query(
-      'SELECT t.id, t.user_id, t.restaurant_id, t.open_time, t.is_open, t.total FROM tabs t WHERE t.id = $1',
-      [tab_id]
-    );
-    const updatedTab = updatedTabResult.rows[0];
+    const updatedTab = await models.Tab.findByPk(tab_id, {
+      attributes: ['id', 'user_id', 'restaurant_id', 'open_time', 'is_open', 'total']
+    });
 
     // Emit item served event to customer
     console.log(`Emitting item served event: tabId=${tab_id}, itemId=${item_id}, served=${served}`);
@@ -334,7 +360,7 @@ export async function updateTabItemServed(req, res) {
     // Emit tab update event to managers
     await emitTabUpdate(tab_id, restaurantId, updatedTab);
 
-    res.json({ tabItem: result.rows[0] });
+    res.json({ tabItem: updatedItem });
   } catch (err) {
     logger.error('Update tab item served error', err);
     res.status(500).json({ error: 'Internal server error' });

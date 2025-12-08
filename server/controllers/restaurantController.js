@@ -1,4 +1,4 @@
-import pool from '../database/config.js';
+import models from '../database/models/index.js';
 import logger from '../logger.js';
 
 /**
@@ -9,8 +9,11 @@ import logger from '../logger.js';
  */
 export async function getAllRestaurants(req, res) {
   try {
-    const result = await pool.query('SELECT id, name, slogan, address, open_time, close_time, image_url, manager_id, created_at FROM restaurants ORDER BY name');
-    res.json({ restaurants: result.rows });
+    const restaurants = await models.Restaurant.findAll({
+      attributes: ['id', 'name', 'slogan', 'address', 'open_time', 'close_time', 'image_url', 'manager_id', 'created_at'],
+      order: [['name', 'ASC']]
+    });
+    res.json({ restaurants });
   } catch (err) {
     logger.error('Get all restaurants error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -26,11 +29,13 @@ export async function getAllRestaurants(req, res) {
 export async function getRestaurantById(req, res) {
   const { id } = req.params;
   try {
-    const result = await pool.query('SELECT id, name, slogan, address, image_url, open_time, close_time, manager_id, created_at FROM restaurants WHERE id = $1', [id]);
-    if (result.rowCount === 0) {
+    const restaurant = await models.Restaurant.findByPk(id, {
+      attributes: ['id', 'name', 'slogan', 'address', 'image_url', 'open_time', 'close_time', 'manager_id', 'created_at']
+    });
+    if (!restaurant) {
       return res.status(404).json({ error: 'Restaurant not found' });
     }
-    res.json({ restaurant: result.rows[0] });
+    res.json({ restaurant });
   } catch (err) {
     logger.error('Get restaurant by ID error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -47,27 +52,31 @@ export async function getMenu(req, res) {
   const { id } = req.params;
   try {
     // First check if restaurant exists
-    const restaurantCheck = await pool.query('SELECT id FROM restaurants WHERE id = $1', [id]);
-    if (restaurantCheck.rowCount === 0) {
+    const restaurant = await models.Restaurant.findByPk(id);
+    if (!restaurant) {
       return res.status(404).json({ error: 'Restaurant not found' });
     }
 
-    const result = await pool.query(`
-      SELECT mi.id, mi.type, mi.name, mi.abv, mi.description, mi.image_url, mi.price, mi.created_at
-      FROM menu_items mi
-      JOIN restaurant_menu_items rmi ON mi.id = rmi.menu_item_id
-      WHERE rmi.restaurant_id = $1
-      ORDER BY mi.type, mi.name
-    `, [id]);
+    const menuItems = await models.RestaurantMenuItem.findAll({
+      where: { restaurant_id: id },
+      include: [{
+        model: models.MenuItem,
+        attributes: ['id', 'type', 'name', 'abv', 'description', 'image_url', 'price', 'created_at']
+      }],
+      order: [[models.MenuItem, 'type', 'ASC'], [models.MenuItem, 'name', 'ASC']]
+    });
 
-    // Parse numeric fields
-    const menuItems = result.rows.map(item => ({
-      ...item,
-      price: parseFloat(item.price),
-      abv: item.abv ? parseFloat(item.abv) : null
-    }));
+    // Format the response to match the original structure
+    const formattedMenuItems = menuItems.map(item => {
+      const menuItem = item.MenuItem.toJSON();
+      return {
+        ...menuItem,
+        price: parseFloat(menuItem.price),
+        abv: menuItem.abv ? parseFloat(menuItem.abv) : null
+      };
+    });
 
-    res.json({ menuItems: menuItems });
+    res.json({ menuItems: formattedMenuItems });
   } catch (err) {
     logger.error('Get menu error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -84,8 +93,10 @@ export async function checkManagerStatus(req, res) {
   const manager_id = req.user.id;
 
   try {
-    const result = await pool.query('SELECT COUNT(*) as count FROM restaurants WHERE manager_id = $1', [manager_id]);
-    const isManager = parseInt(result.rows[0].count) > 0;
+    const restaurantCount = await models.Restaurant.count({
+      where: { manager_id }
+    });
+    const isManager = restaurantCount > 0;
     res.json({ isManager });
   } catch (err) {
     logger.error('Check manager status error', err);
@@ -104,40 +115,49 @@ export async function getManagerTabs(req, res) {
 
   try {
     // Get all restaurants managed by this user
-    const restaurantsResult = await pool.query('SELECT id, name FROM restaurants WHERE manager_id = $1', [manager_id]);
+    const restaurants = await models.Restaurant.findAll({
+      where: { manager_id },
+      attributes: ['id', 'name']
+    });
 
     // Get all open tabs for these restaurants
     const restaurantsWithTabs = await Promise.all(
-      restaurantsResult.rows.map(async (restaurant) => {
-        const tabsResult = await pool.query(
-          'SELECT t.id, t.user_id, t.restaurant_id, t.is_open, t.created_at FROM tabs t WHERE t.restaurant_id = $1 AND t.is_open = true ORDER BY t.created_at',
-          [restaurant.id]
-        );
+      restaurants.map(async (restaurant) => {
+        const tabs = await models.Tab.findAll({
+          where: { restaurant_id: restaurant.id, is_open: true },
+          attributes: ['id', 'user_id', 'restaurant_id', 'is_open', 'created_at'],
+          order: [['created_at', 'ASC']],
+          include: [{
+            model: models.TabItem,
+            include: [{
+              model: models.MenuItem,
+              attributes: ['name']
+            }],
+            attributes: ['id', 'quantity', 'sub_price', 'served', 'created_at'],
+            order: [['created_at', 'ASC']]
+          }]
+        });
 
-        // Get items for each tab
-        const tabsWithItems = await Promise.all(
-          tabsResult.rows.map(async (tab) => {
-            const itemsResult = await pool.query(
-              'SELECT ti.id, ti.quantity, ti.sub_price as price, ti.served, mi.name FROM tab_items ti JOIN menu_items mi ON ti.menu_item_id = mi.id WHERE ti.tab_id = $1 ORDER BY ti.created_at',
-              [tab.id]
-            );
-
-            return {
-              ...tab,
-              restaurant_name: restaurant.name,
-              tab_items: itemsResult.rows.map(item => ({
-                ...item,
-                price: parseFloat(item.price),
-                quantity: parseInt(item.quantity),
-                served: Boolean(item.served),
-                menu_item: { name: item.name }
-              }))
-            };
-          })
-        );
+        // Format tabs with items
+        const tabsWithItems = tabs.map(tab => ({
+          id: tab.id,
+          user_id: tab.user_id,
+          restaurant_id: tab.restaurant_id,
+          is_open: tab.is_open,
+          created_at: tab.created_at,
+          restaurant_name: restaurant.name,
+          tab_items: tab.TabItems.map(item => ({
+            id: item.id,
+            quantity: parseInt(item.quantity),
+            price: parseFloat(item.sub_price),
+            served: Boolean(item.served),
+            menu_item: { name: item.MenuItem.name }
+          }))
+        }));
 
         return {
-          ...restaurant,
+          id: restaurant.id,
+          name: restaurant.name,
           tabs: tabsWithItems
         };
       })
@@ -162,36 +182,46 @@ export async function getOpenTabsForRestaurant(req, res) {
 
   try {
     // First verify the user is the manager of this restaurant
-    const restaurantCheck = await pool.query('SELECT id FROM restaurants WHERE id = $1 AND manager_id = $2', [id, manager_id]);
-    if (restaurantCheck.rowCount === 0) {
+    const restaurant = await models.Restaurant.findOne({
+      where: { id, manager_id }
+    });
+    if (!restaurant) {
       return res.status(403).json({ error: 'Access denied. You are not the manager of this restaurant.' });
     }
 
     // Get all open tabs with their items
-    const tabsResult = await pool.query(
-      'SELECT t.id, t.user_id, t.restaurant_id, t.open_time, t.is_open, t.total FROM tabs t WHERE t.restaurant_id = $1 AND t.is_open = true ORDER BY t.open_time',
-      [id]
-    );
+    const tabs = await models.Tab.findAll({
+      where: { restaurant_id: id, is_open: true },
+      attributes: ['id', 'user_id', 'restaurant_id', 'open_time', 'is_open', 'total'],
+      order: [['open_time', 'ASC']],
+      include: [{
+        model: models.TabItem,
+        include: [{
+          model: models.MenuItem,
+          attributes: ['name', 'type']
+        }],
+        attributes: ['id', 'quantity', 'sub_price', 'served', 'created_at'],
+        order: [['created_at', 'ASC']]
+      }]
+    });
 
-    // Get items for each tab
-    const tabsWithItems = await Promise.all(
-      tabsResult.rows.map(async (tab) => {
-        const itemsResult = await pool.query(
-          'SELECT ti.id, ti.quantity, ti.sub_price, ti.served, mi.name, mi.type FROM tab_items ti JOIN menu_items mi ON ti.menu_item_id = mi.id WHERE ti.tab_id = $1 ORDER BY ti.created_at',
-          [tab.id]
-        );
-
-        return {
-          ...tab,
-          items: itemsResult.rows.map(item => ({
-            ...item,
-            sub_price: parseFloat(item.sub_price),
-            quantity: parseInt(item.quantity),
-            served: Boolean(item.served)
-          }))
-        };
-      })
-    );
+    // Format the response
+    const tabsWithItems = tabs.map(tab => ({
+      id: tab.id,
+      user_id: tab.user_id,
+      restaurant_id: tab.restaurant_id,
+      open_time: tab.open_time,
+      is_open: tab.is_open,
+      total: parseFloat(tab.total),
+      items: tab.TabItems.map(item => ({
+        id: item.id,
+        quantity: parseInt(item.quantity),
+        sub_price: parseFloat(item.sub_price),
+        served: Boolean(item.served),
+        name: item.MenuItem.name,
+        type: item.MenuItem.type
+      }))
+    }));
 
     res.json({ tabs: tabsWithItems });
   } catch (err) {

@@ -1,4 +1,4 @@
-import pool from '../database/config.js';
+import models from '../database/models/index.js';
 import logger from '../logger.js';
 
 /**
@@ -11,12 +11,13 @@ export async function getPaymentMethods(req, res) {
   const userId = req.user.id;
 
   try {
-    const result = await pool.query(
-      'SELECT id, user_id, card_brand, card_number, card_exp_month, card_exp_year, billing_address, is_default, created_at FROM payment_methods WHERE user_id = $1 ORDER BY created_at DESC',
-      [userId]
-    );
+    const paymentMethods = await models.PaymentMethod.findAll({
+      where: { user_id: userId },
+      attributes: ['id', 'user_id', 'card_brand', 'card_number', 'card_exp_month', 'card_exp_year', 'billing_address', 'is_default', 'created_at'],
+      order: [['created_at', 'DESC']]
+    });
 
-    res.json({ paymentMethods: result.rows });
+    res.json({ paymentMethods });
   } catch (err) {
     logger.error('Get payment methods error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -41,27 +42,32 @@ export async function createPaymentMethod(req, res) {
   try {
     // If setting as default, unset all others
     if (is_default) {
-      await pool.query('UPDATE payment_methods SET is_default = FALSE WHERE user_id = $1', [userId]);
+      await models.PaymentMethod.update(
+        { is_default: false },
+        { where: { user_id: userId } }
+      );
     }
 
-    const query = `
-      INSERT INTO payment_methods (user_id, card_number, card_cvc, card_holder_name, card_brand, card_exp_month, card_exp_year, billing_address, is_default)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING id, user_id, card_brand, card_number, card_exp_month, card_exp_year, billing_address, is_default, created_at
-    `;
-    const values = [userId, card_number, card_cvc, card_holder_name, card_brand, card_exp_month, card_exp_year, billing_address || null, is_default];
-
-    const result = await pool.query(query, values);
-    const paymentMethod = result.rows[0];
+    const paymentMethod = await models.PaymentMethod.create({
+      user_id: userId,
+      card_number,
+      card_cvc,
+      card_holder_name,
+      card_brand,
+      card_exp_month,
+      card_exp_year,
+      billing_address,
+      is_default
+    });
 
     // Mask card number for response
-    if (paymentMethod.card_number) {
-      paymentMethod.card_number = paymentMethod.card_number.slice(-4);
-      delete paymentMethod.card_number;
-      delete paymentMethod.card_cvc;
+    const responseData = paymentMethod.toJSON();
+    if (responseData.card_number) {
+      responseData.card_number = responseData.card_number.slice(-4);
+      delete responseData.card_cvc;
     }
 
-    res.status(201).json({ paymentMethod });
+    res.status(201).json({ paymentMethod: responseData });
   } catch (err) {
     logger.error('Create payment method error', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -79,8 +85,11 @@ export async function deletePaymentMethod(req, res) {
   const paymentId = req.params.id;
 
   try {
-    const result = await pool.query('DELETE FROM payment_methods WHERE id = $1 AND user_id = $2', [paymentId, userId]);
-    if (result.rowCount === 0) {
+    const deletedCount = await models.PaymentMethod.destroy({
+      where: { id: paymentId, user_id: userId }
+    });
+
+    if (deletedCount === 0) {
       return res.status(404).json({ error: 'Payment method not found' });
     }
     res.json({ message: 'Payment method deleted successfully' });

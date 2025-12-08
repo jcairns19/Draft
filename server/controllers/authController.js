@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import pool from '../database/config.js';
+import models from '../database/models/index.js';
 import auth from '../middleware/auth.js';
 import logger from '../logger.js';
 
@@ -19,19 +19,20 @@ export async function signup(req, res) {
 
   try {
     // Check existing email
-    const exists = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
-    if (exists.rowCount > 0) return res.status(409).json({ error: 'Email already in use' });
+    const existingUser = await models.User.findOne({ where: { email } });
+    if (existingUser) return res.status(409).json({ error: 'Email already in use' });
 
     const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
     const password_hash = await bcrypt.hash(password, saltRounds);
 
-    const insert = await pool.query(
-      `INSERT INTO users (first_name, last_name, email, password_hash, profile_picture_url)
-       VALUES ($1, $2, $3, $4, $5) RETURNING id, first_name, last_name, email, profile_picture_url, created_at`,
-      [first_name, last_name, email, password_hash, profile_picture_url || null]
-    );
+    const user = await models.User.create({
+      first_name,
+      last_name,
+      email,
+      password_hash,
+      profile_picture_url
+    });
 
-    const user = insert.rows[0];
     // Optionally sign a token and return it on signup
     const token = auth.signToken(user);
     return res.status(201).json({ user, token });
@@ -53,17 +54,17 @@ export async function login(req, res) {
   if (!email || !password) return res.status(400).json({ error: 'email and password required' });
 
   try {
-    const result = await pool.query('SELECT id, first_name, last_name, email, password_hash, profile_picture_url FROM users WHERE email = $1', [email]);
-    if (result.rowCount === 0) return res.status(401).json({ error: 'Invalid credentials' });
+    const user = await models.User.findOne({ where: { email } });
+    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const user = result.rows[0];
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = auth.signToken(user);
     // Do not leak password_hash
-    delete user.password_hash;
-    return res.json({ user, token });
+    const userResponse = { ...user.toJSON() };
+    delete userResponse.password_hash;
+    return res.json({ user: userResponse, token });
   } catch (err) {
     logger.error('Login error', err);
     res.status(500).json({ error: 'Internal server error' });
