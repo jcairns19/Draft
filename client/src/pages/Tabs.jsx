@@ -170,7 +170,7 @@ const Tabs = () => {
               restaurant.tabs.map(tab => (
                 <div key={tab.id} className="tab-card">
                   <div className="tab-header">
-                    <h3>Tab #{tab.id}</h3>
+                    <h3>{restaurant.name}</h3>
                     <span className="tab-status">Status: {tab.is_open ? 'Open' : 'Closed'}</span>
                   </div>
 

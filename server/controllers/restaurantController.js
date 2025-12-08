@@ -124,6 +124,7 @@ export async function getManagerTabs(req, res) {
 
             return {
               ...tab,
+              restaurant_name: restaurant.name,
               tab_items: itemsResult.rows.map(item => ({
                 ...item,
                 price: parseFloat(item.price),

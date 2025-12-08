@@ -244,7 +244,7 @@ export async function getTab(req, res) {
   try {
     // Get tab info
     const tabResult = await pool.query(
-      'SELECT id, user_id, restaurant_id, payment_method_id, open_time, close_time, is_open, total, created_at FROM tabs WHERE id = $1 AND user_id = $2',
+      'SELECT t.id, t.user_id, t.restaurant_id, t.payment_method_id, t.open_time, t.close_time, t.is_open, t.total, t.created_at, r.name as restaurant_name FROM tabs t JOIN restaurants r ON t.restaurant_id = r.id WHERE t.id = $1 AND t.user_id = $2',
       [tab_id, user_id]
     );
     if (tabResult.rowCount === 0) {

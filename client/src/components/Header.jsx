@@ -19,16 +19,11 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-content">
-        <Link to={isAuthenticated ? "/dashboard" : "/"} className="logo" onClick={closeMenu}>
+        <Link to={isAuthenticated ? "/restaurants" : "/"} className="logo" onClick={closeMenu}>
           <h1>Draft</h1>
         </Link>
 
         <nav className={`nav ${menuOpen ? 'open' : ''}`}>
-          {isAuthenticated && (
-            <Link to="/dashboard" className="nav-link" onClick={closeMenu}>
-              Dashboard
-            </Link>
-          )}
 
           <Link to="/restaurants" className="nav-link" onClick={closeMenu}>
             Restaurants

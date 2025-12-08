@@ -232,10 +232,10 @@ const TabDetail = () => {
 
         <div className="confirmation-actions">
           <button 
-            onClick={() => navigate('/dashboard')} 
+            onClick={() => navigate('/restaurants')} 
             className="action-button primary"
           >
-            Return to Dashboard
+            Return to Restaurants
           </button>
           <button 
             onClick={() => navigate('/tabs')} 
