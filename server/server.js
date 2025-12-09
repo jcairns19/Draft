@@ -39,25 +39,14 @@ app.use(requestLogger);
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// Catch all handler: send back React's index.html file for client-side routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
-
 // Serve static images from the images directory
 app.use('/images', express.static('images'));
 
 // Routes
 app.use('/api', apiRouter);
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the Draft Server API' });
-});
 
-// Setup Socket.IO
-setupSocketIO(io);
-
-// Start server
-const hostname = process.env.HOST || 'localhost';
-server.listen(port, hostname, () => {
-  logger.info(`Server running on ${hostname}:${port}`);
+// Catch all handler: send back React's index.html file for client-side routing
+// This must come AFTER API routes to avoid intercepting /api/* requests
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
