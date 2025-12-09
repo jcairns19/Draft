@@ -36,6 +36,7 @@ app.use(express.json());
 app.use(requestLogger);
 
 // Serve static files from the React app build directory
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Catch all handler: send back React's index.html file for client-side routing
