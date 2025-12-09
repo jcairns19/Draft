@@ -28,6 +28,7 @@ const io = new Server(server, {
   }
 });
 const port = process.env.PORT || 3000;
+const host = process.env.HOST || '0.0.0.0';
 
 // CORS configuration
 app.use(cors({
@@ -52,4 +53,13 @@ app.use('/api', apiRouter);
 // This must come AFTER API routes to avoid intercepting /api/* requests
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
+// Setup Socket.IO
+setupSocketIO(io);
+
+// Start the server
+server.listen(port, host, () => {
+  logger.info(`Server running on ${host}:${port}`);
+  console.log(`Server running on ${host}:${port}`);
 });
