@@ -41,7 +41,7 @@ export default (sequelize) => {
     },
   }, {
     tableName: 'restaurants',
-    timestamps: false, // No updated_at in SQL
+    timestamps: false,
     indexes: [
       {
         fields: ['manager_id'],

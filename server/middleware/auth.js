@@ -16,11 +16,11 @@ export async function authenticateToken(req, res, next) {
   const token = parts[1];
   try {
     const payload = jwt.verify(token, JWT_SECRET);
-    // Attach user info to request (we'll fetch fresh user from DB)
+    // Attach user info to request
     const { userId } = payload;
     if (!userId) return res.status(401).json({ error: 'Invalid token payload' });
 
-    // Optional: load user details from DB to attach to req.user
+    // load user details from DB to attach to req.user
     const user = await models.User.findByPk(userId, {
       attributes: ['id', 'first_name', 'last_name', 'email', 'profile_picture_url', 'created_at']
     });

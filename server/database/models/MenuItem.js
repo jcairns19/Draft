@@ -34,7 +34,7 @@ export default (sequelize) => {
     },
   }, {
     tableName: 'menu_items',
-    timestamps: false, // No updated_at
+    timestamps: false,
   });
 
   MenuItem.associate = (models) => {

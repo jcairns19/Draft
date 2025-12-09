@@ -53,12 +53,6 @@ Object.keys(models).forEach((modelName) => {
   }
 });
 
-// Sync database (optional, for development)
-if (process.env.NODE_ENV === 'development') {
-  // Removed auto-sync; use reset_db.js for schema changes
-  // await sequelize.sync({ alter: true });
-  // logger.info('Database synchronized');
-}
 
 export { sequelize };
 export default models;
