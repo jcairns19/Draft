@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { formatTime, isOpen } from '../utils/timeUtils';
+import { SERVER_URL } from '../utils/config';
 import './Restaurants.css';
 
 const Restaurants = () => {
@@ -49,7 +50,7 @@ const Restaurants = () => {
           >
             {restaurant.image_url && (
               <img
-                src={`http://localhost:3000${restaurant.image_url}`}
+                src={`${SERVER_URL}${restaurant.image_url}`}
                 alt={restaurant.name}
                 className="restaurant-image"
               />

@@ -186,7 +186,7 @@ const RestaurantDetail = () => {
     <div className="restaurant-detail">
       {restaurant.image_url && (
         <img
-          src={`http://localhost:3000${restaurant.image_url}`}
+          src={`${SERVER_URL}${restaurant.image_url}`}
           alt={restaurant.name}
           className="restaurant-hero-image"
         />
