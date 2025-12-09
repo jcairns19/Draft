@@ -34,6 +34,14 @@ app.use(cors({
 app.use(express.json());
 app.use(requestLogger);
 
+// Serve static files from the React app build directory
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// Catch all handler: send back React's index.html file for client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
 // Serve static images from the images directory
 app.use('/images', express.static('images'));
 
@@ -47,6 +55,7 @@ app.get('/', (req, res) => {
 setupSocketIO(io);
 
 // Start server
-server.listen(port, () => {
-  logger.info(`Server running on port ${port}`);
+const hostname = process.env.HOST || 'localhost';
+server.listen(port, hostname, () => {
+  logger.info(`Server running on ${hostname}:${port}`);
 });
