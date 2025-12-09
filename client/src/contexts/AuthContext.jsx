@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const [isManager, setIsManager] = useState(false);
 
   // Configure axios defaults
-  axios.defaults.baseURL = 'http://localhost:3000/api';
+  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
   // Set auth header if token exists
   useEffect(() => {
