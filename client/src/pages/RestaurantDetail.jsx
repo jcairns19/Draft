@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { formatTime, isOpen } from '../utils/timeUtils';
 import { useAuth } from '../contexts/AuthContext';
+import { SERVER_URL } from '../utils/config';
 import './RestaurantDetail.css';
 
 const RestaurantDetail = () => {
@@ -275,7 +276,7 @@ const RestaurantDetail = () => {
                     <div key={item.id} className="menu-item">
                       {item.image_url && (
                         <img
-                          src={`http://localhost:3000${item.image_url}`}
+                          src={`${SERVER_URL}${item.image_url}`}
                           alt={item.name}
                           className="menu-item-image"
                         />
