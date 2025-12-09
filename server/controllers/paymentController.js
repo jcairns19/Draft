@@ -34,7 +34,9 @@ export async function getPaymentMethods(req, res) {
  */
 export async function createPaymentMethod(req, res) {
   const userId = req.user.id;
-  const { card_number, card_cvc, card_holder_name, card_brand, card_exp_month, card_exp_year, billing_address, is_default = false } = req.body || {};
+  const { card_number, card_cvc, card_holder_name, card_brand, card_exp_month, card_exp_year, billing_address, is_default: initialIsDefault = false } = req.body || {};
+
+  let is_default = initialIsDefault;
 
   if (!card_number || !card_cvc) {
     return res.status(400).json({ error: 'card_number and card_cvc are required' });
