@@ -12,8 +12,8 @@ const Home = () => {
         <p>Discover great restaurants and manage your dining experience</p>
 
         {isAuthenticated ? (
-          <Link to="/restaurants" className="cta-button">
-            Browse Restaurants
+          <Link to="/restaurants" className="cta-button browse-button">
+            🍽️ Browse Restaurants
           </Link>
         ) : (
           <div className="auth-buttons">

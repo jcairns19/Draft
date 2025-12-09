@@ -253,7 +253,7 @@ const RestaurantDetail = () => {
             disabled={loading}
             className="submit-order-btn"
           >
-            {loading ? 'Submitting...' : 'Submit Order'}
+            {loading ? 'Submitting...' : openTab ? 'Add to Tab' : 'Start Tab'}
           </button>
         </div>
       )}

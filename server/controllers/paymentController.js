@@ -26,6 +26,7 @@ export async function getPaymentMethods(req, res) {
 
 /**
  * Creates a new payment method for the authenticated user.
+ * If the user has no existing payment methods, is_default will be set to true.
  * If is_default is set to true, all other payment methods for the user will be set to is_default = false.
  * @param {Object} req - Express request object with req.user populated by auth middleware, body containing payment details including optional is_default.
  * @param {Object} res - Express response object.
@@ -40,6 +41,12 @@ export async function createPaymentMethod(req, res) {
   }
 
   try {
+    // Check if user has any existing payment methods
+    const existingCount = await models.PaymentMethod.count({ where: { user_id: userId } });
+    if (existingCount === 0) {
+      is_default = true;
+    }
+
     // If setting as default, unset all others
     if (is_default) {
       await models.PaymentMethod.update(

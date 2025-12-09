@@ -59,6 +59,51 @@
   color: #2563eb;
 }
 
+.cta-button.browse-button {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white;
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+  border: none;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  position: relative;
+  overflow: hidden;
+  animation: pulse 2s infinite;
+}
+
+.cta-button.browse-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.cta-button.browse-button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+  animation: none;
+}
+
+.cta-button.browse-button:hover::before {
+  left: 100%;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.6);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  }
+}
+
 .auth-buttons {
   display: flex;
   flex-direction: column;

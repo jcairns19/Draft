@@ -39,6 +39,7 @@ export default (sequelize) => {
 
   MenuItem.associate = (models) => {
     MenuItem.hasMany(models.TabItem, { foreignKey: 'menu_item_id', onDelete: 'CASCADE' });
+    MenuItem.hasMany(models.RestaurantMenuItem, { foreignKey: 'menu_item_id', onDelete: 'CASCADE' });
     MenuItem.belongsToMany(models.Restaurant, {
       through: models.RestaurantMenuItem,
       foreignKey: 'menu_item_id',
