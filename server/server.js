@@ -2,12 +2,16 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import apiRouter from './routes/api.js';
 import { setupSocketIO } from './socket.js';
 import logger from './logger.js';
 import { requestLogger } from './middleware/requestLogger.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = createServer(app);
@@ -36,7 +40,6 @@ app.use(express.json());
 app.use(requestLogger);
 
 // Serve static files from the React app build directory
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Serve static images from the images directory
